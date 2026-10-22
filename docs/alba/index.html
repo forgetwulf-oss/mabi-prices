@@ -19,7 +19,7 @@ tr.det>td{background:#191c22;font-size:13px}.rt td{padding:3px 8px;border:0;font
 .pop.wide{width:900px}.row{display:flex;gap:8px;align-items:center;margin:8px 0}.row label{width:120px;color:var(--mu)}.hid{display:none}.tg{font-size:12px;padding:2px 8px}.tg.api{border-color:#7aa2ff;color:#9bb8ff}
 .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#333;padding:8px 16px;border-radius:8px;opacity:0;transition:.3s}.toast.on{opacity:1}
 .rp{font-size:12px;margin-left:8px;padding:0 5px;border-radius:6px;color:#6b7180}.rp.on{color:var(--g);background:#1f3326;font-weight:700}.tag.av{color:#9aa0ad;border-color:#4a4f5c;cursor:help}.rp.nt{text-decoration:underline dotted}
-button.star{border:none;background:none;padding:0 4px 0 0;color:#5a6070;font-size:15px;line-height:1}button.star.on{color:#f7c948}button.star:hover{color:#f7d98b}#bUla.on,#bFav.on{border-color:#f7c948;color:#f7c948}.ord{display:inline-block;min-width:20px;color:var(--mu);font-size:11.5px}.sq{font-size:11.5px;color:var(--mu);margin:1px 0 0 20px}tr.gapr td{color:#c9a46a;font-size:12px;padding:3px 12px;background:#181a20}tr.dnh td{padding:4px 12px;font-size:12.5px;color:var(--mu);background:#181a20}tr.fav td:first-child{box-shadow:inset 3px 0 #f7c948}span.shop{font-size:11.5px;color:var(--mu);margin-right:1px}.seq{background:var(--p);border-radius:12px;padding:8px 12px 6px;margin:0 0 14px}.seq .hd{display:flex;align-items:center;gap:10px;font-size:13px;margin-bottom:4px}.seq table{background:none}.seq td{padding:4px 8px;font-size:13px}.seq tr.gap td{color:#c9a46a;font-size:12px;padding:2px 8px}.seq .tg{padding:1px 8px}.seq .chk{width:22px;height:22px}.seq .ix{color:var(--mu);width:22px}
+button.star{border:none;background:none;padding:2px 6px 2px 0;margin-left:-4px;color:#4a505c;font-size:19px;line-height:1;vertical-align:-2px;cursor:pointer;min-width:26px}button.star.on{color:#f7c948}button.star:hover{color:#f7d98b}#bUla.on,#bFav.on{border-color:#f7c948;color:#f7c948}.ord{display:inline-block;min-width:20px;color:var(--mu);font-size:11.5px}.sq{font-size:11.5px;color:var(--mu);margin:1px 0 0 20px}tr.gapr td{color:#c9a46a;font-size:12px;padding:3px 12px;background:#181a20}tr.dnh td{padding:4px 12px;font-size:12.5px;color:var(--mu);background:#181a20}tr.fav td:first-child{box-shadow:inset 3px 0 #f7c948}span.shop{font-size:11.5px;color:var(--mu);margin-right:1px}.seq{background:var(--p);border-radius:12px;padding:8px 12px 6px;margin:0 0 14px}.seq .hd{display:flex;align-items:center;gap:10px;font-size:13px;margin-bottom:4px}.seq table{background:none}.seq td{padding:4px 8px;font-size:13px}.seq tr.gap td{color:#c9a46a;font-size:12px;padding:2px 8px}.seq .tg{padding:1px 8px}.seq .chk{width:22px;height:22px}.seq .ix{color:var(--mu);width:22px}
 #homeLink:hover{color:#f7d98b!important;text-decoration:underline!important}</style></head><body><div class="wrap">
 <div class="top"><a id="homeLink" href="https://mabi-life.github.io/" title="생활도우미 메인으로" style="color:var(--mu);font-size:12.5px;text-decoration:none;margin-right:4px;white-space:nowrap">← 생활도우미</a><h1>🧺 알바 도우미 <span class="mu" style="font-size:12px">v2</span></h1><div class="chips" id="buffs"></div><div class="sp"></div>
 <span class="clock" id="clock" title="에린 시간 (추정)"></span><button id="bUla" title="울라 대륙만 / 전체 대륙 (기본: 울라만)">울라만</button><button id="bFav" title="★ 즐겨찾기만 보기">★만</button><button id="bAll" title="접힌 줄 모두 보기">펼치기</button><button id="bCombo" title="조합 계산">조합</button><button id="bPrice" title="시세">💰</button><button id="bUndo" title="되돌리기 (Ctrl+Z)">↶</button><button id="bSet" title="설정">⚙</button></div>
@@ -67,10 +67,13 @@ function knap(items,B){const n=items.length,dp=[new Array(B+1).fill(0)],ch=[];
  for(let i=n-1;i>=0;i--){const k=ch[i][b];if(k){pick.push([items[i],k]);b-=k*items[i].pts}}return{gold:bestG,used,left:B-used,pick:pick.reverse()}}
 const mixOf=(j,B)=>knap(j.rewards.filter(r=>rgold(r,B)!=null&&r.pts>0),B);
 const toM=t=>{if(!t)return null;const[h,m]=t.split(':').map(Number);return h*60+(m||0)};
-function erinMin(){return Math.floor((Date.now()/1500)+(S.erinOff||0))%1440}// 에린 1분 = 현실 1.5초 (1일=36분), 유닉스 기준 정렬(추정)
+function erinMin(){return ((erinAbs()%1440)+1440)%1440}// 에린 1분 = 현실 1.5초 (1일=36분), 유닉스 기준 정렬(추정)
 const hm=m=>String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');
-function gameDay(){const[h,m]=S.set.reset.split(':').map(Number);const d=new Date(Date.now()-((h||0)*60+(m||0))*6e4);return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()}
-function ch(){const c=S.chars[S.cur]||S.chars[0];const d=gameDay();if(c.day!==d){c.day=d;c.done=[]}return c}
+// 완료 체크는 에린 자정마다 초기화 (에린 1일 = 현실 36분). erinMin()과 같은 시계(erinOff 포함), seqPlan의 '종류당 에린 하루 1개'와 같은 날 키
+const erinAbs=()=>Math.floor(Date.now()/1500+(S.erinOff||0)),erinDay=a=>Math.floor(a/1440);
+function gameDay(){return 'E'+erinDay(erinAbs())}
+function realDayOld(){const[h,m]=(S.set.reset||'07:00').split(':').map(Number);const d=new Date(Date.now()-((h||0)*60+(m||0))*6e4);return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()}
+function ch(){const c=S.chars[S.cur]||S.chars[0];const d=gameDay();if(c.day!==d){if(c.day&&c.day[0]!=='E'&&c.day===realDayOld()){c.day=d}else{c.day=d;c.done=[]}}return c}// 옛 데이터(KST 날짜 키): 오늘 것이면 체크 유지하고 에린 키로 전환
 function expandedSet(B){return new Set(seqPlan(ch(),B).map(x=>x.j.id))}// 펼침 = 이어서 하는 순서(아래 seqPlan)
 function focus(c,ids){const now=erinMin(),open=S.jobs.filter(j=>ids.has(j.id)&&!c.done.includes(j.id));const timed=open.filter(j=>toM(j.start)!=null);
  if(timed.length){const cur=timed.find(j=>now>=toM(j.start)&&now<(toM(j.end)??1380));if(cur)return{id:cur.id,lab:'지금'};
@@ -90,16 +93,16 @@ function repH(j){const p=repOf(j);if(!p)return'';const now=erinMin(),a=toM(p.r),
 // 지양·오늘 완료 제외, 같은 종류(type)는 에린 하루(00:00 기준)에 1개만 (계정당 제한)
 // 울라 대륙 마을 (나무위키 '마비노기/NPC' 지역 분류 2.x 울라: 티르코네일·두갈드 아일·던바튼·카브 항구·반호르·이멘마하·탈틴·타라). 이리아(켈라·필리아·발레스·칼리다)·벨바스트는 제외
 const ULA=new Set(['티르코네일','티르코','두갈드 아일','던바튼','카브','반호르','이멘마하','탈틴','타라']);const isUla=j=>ULA.has(j.village);
-function seqPlan(c,B,maxN=60){const now=Math.floor(Date.now()/1500+(S.erinOff||0));let t=now;const used=new Set(),tl={},iv={},out=[];
+function seqPlan(c,B,maxN=60){const now=erinAbs();let t=now;const used=new Set(),tl={},iv={},out=[];
  const ty=j=>j.type||j.id,cand=S.jobs.filter(j=>(S.seqAll||isUla(j))&&(!S.favOnly||j.fav)&&!j.avoid&&!c.done.includes(j.id)&&toM(j.start)!=null&&toM(j.end)!=null);
  for(let n=0;n<maxN;n++){const rep={};// 종류별 대표: 이번 칸에 가능한 같은 종류 중 골드 최고
   for(const j of cand){if(used.has(j.id))continue;const s=toM(j.start);let e=toM(j.end);if(e<=s)e+=1440;const p=repOf(j);let r=p?toM(p.r):s;if(r<s)r+=1440;
-   const d0=Math.floor((t-s)/1440);for(let d=d0;d<=d0+2;d++){const ws=d*1440+s,we=d*1440+e;if(we<=t)continue;const acc=Math.max(t,ws),day=Math.floor(acc/1440),k=ty(j);
+   const d0=Math.floor((t-s)/1440);for(let d=d0;d<=d0+2;d++){const ws=d*1440+s,we=d*1440+e;if(we<=t)continue;const acc=Math.max(t,ws),day=erinDay(acc),k=ty(j);
     if(tl[k+'@'+day]||(iv[k]||[]).some(([a,z])=>acc<z&&we>a))continue;// 같은 종류: 에린 하루 1개 + 시간대 겹침 금지
     const x={j,acc,rep:Math.max(acc,d*1440+r),g:(best(j,B)||{}).g||0,end:we,f:j.fav?1:0},o=rep[k];
     if(!o||x.f>o.f||x.f===o.f&&(x.g>o.g||x.g===o.g&&x.rep<o.rep))rep[k]=x;break}}// ★ 즐겨찾기가 같은 종류에서 우선
   let bj=null;for(const x of Object.values(rep))if(!bj||x.rep<bj.rep||(x.rep===bj.rep&&(x.f>bj.f||x.f===bj.f&&x.g>bj.g)))bj=x;// 1순위: 보고 가능 시각(빠른 순) · 동률: ★ → 골드
-  if(!bj)break;const k=ty(bj.j);used.add(bj.j.id);tl[k+'@'+Math.floor(bj.acc/1440)]=1;(iv[k]=iv[k]||[]).push([bj.acc,bj.end]);out.push({...bj,gap:bj.acc-t,now});t=bj.rep}
+  if(!bj)break;const k=ty(bj.j);used.add(bj.j.id);tl[k+'@'+erinDay(bj.acc)]=1;(iv[k]=iv[k]||[]).push([bj.acc,bj.end]);out.push({...bj,gap:bj.acc-t,now});t=bj.rep}
  return out}
 function render(){const B=budget(),c=ch(),ids=expandedSet(B),f=focus(c,ids);
  $('#buffs').innerHTML=S.set.names.map((n,i)=>`<button class="chip${i==S.buff?' on':''}" data-buff="${i}" title="×${S.set.mult[i]} = ${Math.round(S.set.base*S.set.mult[i])}P">${n}</button>`).join('');
@@ -108,12 +111,12 @@ function render(){const B=budget(),c=ch(),ids=expandedSet(B),f=focus(c,ids);
  $('#clock').textContent='에린 '+hm(erinMin());$('#bAll').textContent=S.showAll?'접기':'펼치기';$('#bUla').textContent=S.seqAll?'전체 대륙':'울라만';$('#bUla').classList.toggle('on',!S.seqAll);$('#bFav').classList.toggle('on',!!S.favOnly);
  const plan=seqPlan(c,B),star=j=>`<button class="star${j.fav?' on':''}" data-fav="${j.id}" title="${j.fav?'즐겨찾기 해제':'즐겨찾기'} (같은 종류·시간대에서 우선)">${j.fav?'★':'☆'}</button>`;
  let html='',grp=[];
- const thin=j=>{const b=best(j,B),dn=c.done.includes(j.id);return `<tr class="job thin${dn?' done':''}" data-open="${j.id}"><td class="tm">${j.start?j.start+'–'+(j.end||''):'—'}${repH(j)}</td><td>${j.village}${!isUla(j)?' <span class="tag">울라 밖</span>':''}</td><td>${star(j)}${npcH(j)}${avT(j)}</td><td>${b?b.r.item:''}${b?'':'<span class="tag">가격 미상</span>'}</td><td class="n gold">${b?'+'+fmt(b.g):''}</td><td><button class="chk${dn?' on':''}" data-done="${j.id}">${dn?'✓':''}</button></td></tr>`+(openId===j.id?detail(j,B):'')};
+ const thin=j=>{const b=best(j,B),dn=c.done.includes(j.id);return `<tr class="job thin${dn?' done':''}" data-open="${j.id}"><td class="tm">${star(j)}${j.start?j.start+'–'+(j.end||''):'—'}${repH(j)}</td><td>${j.village}${!isUla(j)?' <span class="tag">울라 밖</span>':''}</td><td>${npcH(j)}${avT(j)}</td><td>${b?b.r.item:''}${b?'':'<span class="tag">가격 미상</span>'}</td><td class="n gold">${b?'+'+fmt(b.g):''}</td><td><button class="chk${dn?' on':''}" data-done="${j.id}">${dn?'✓':''}</button></td></tr>`+(openId===j.id?detail(j,B):'')};
  const fold=(k,lab,L)=>{if(!L.length)return;if(S.showAll||edit||openGrp[k])html+=L.map(thin).join('');else html+=`<tr class="grp" data-grp="${k}"><td colspan="6">▸ ${lab} ${L.length}개 <span style="opacity:.7">· ${L.slice(0,8).map(j=>j.npc).join(', ')}${L.length>8?' …':''}</span></td></tr>`};
  plan.forEach((x,i)=>{const j=x.j,b=best(j,B),isF=i===0;
   if(x.gap>0)html+=`<tr class="gapr"><td colspan="6">⏳ 빈 시간 에린 ${hm(((x.acc-x.gap)%1440+1440)%1440)}–${hm(x.acc%1440)} (현실 ${Math.round(x.gap*1.5/60)}분)</td></tr>`;
   const rm=Math.round((x.rep-x.now)*1.5/60),lab=isF?(x.acc===x.now?'지금':'다음 '+Math.ceil((x.acc-x.now)*1.5/60)+'분 후'):'';
-  html+=`<tr class="job${isF?' now':''}${j.fav?' fav':''}" data-open="${j.id}"><td class="tm"><span class="ord">${i+1}</span>${j.start?j.start+'–'+(j.end||''):'<span class="mu">—</span>'}${repH(j)}${isF?`<span class="badge">${lab}</span>`:''}<div class="sq">${x.acc===x.now?'지금':hm(x.acc%1440)} 접수 → <b>${hm(x.rep%1440)}</b> 보고${rm>0?' · 현실 '+rm+'분 후':''}</div></td><td>${j.village}${!isUla(j)?' <span class="tag">울라 밖</span>':''}</td><td>${star(j)}${npcH(j)}${avT(j)}</td><td>${b?b.r.item+` <span class="mu">×${b.r.qty*count(b.r,B)}</span>`:'<span class="tag">가격 미상</span>'}</td><td class="n gold">${b?'+'+fmt(b.g):''}</td><td><button class="chk" data-done="${j.id}" title="오늘 완료"></button></td></tr>`+(openId===j.id?detail(j,B):'')});
+  html+=`<tr class="job${isF?' now':''}${j.fav?' fav':''}" data-open="${j.id}"><td class="tm">${star(j)}<span class="ord">${i+1}</span>${j.start?j.start+'–'+(j.end||''):'<span class="mu">—</span>'}${repH(j)}${isF?`<span class="badge">${lab}</span>`:''}<div class="sq">${x.acc===x.now?'지금':hm(x.acc%1440)} 접수 → <b>${hm(x.rep%1440)}</b> 보고${rm>0?' · 현실 '+rm+'분 후':''}</div></td><td>${j.village}${!isUla(j)?' <span class="tag">울라 밖</span>':''}</td><td>${npcH(j)}${avT(j)}</td><td>${b?b.r.item+` <span class="mu">×${b.r.qty*count(b.r,B)}</span>`:'<span class="tag">가격 미상</span>'}</td><td class="n gold">${b?'+'+fmt(b.g):''}</td><td><button class="chk" data-done="${j.id}" title="오늘 완료"></button></td></tr>`+(openId===j.id?detail(j,B):'')});
  const pid=new Set(plan.map(x=>x.j.id)),rest=S.jobs.filter(j=>!pid.has(j.id)&&!c.done.includes(j.id));
  fold('rest','접힌',rest.filter(j=>S.seqAll||isUla(j)));fold('out','울라 밖',rest.filter(j=>!S.seqAll&&!isUla(j)));
  const dn=S.jobs.filter(j=>c.done.includes(j.id));if(dn.length)html+=`<tr class="dnh"><td colspan="6">✓ 오늘 완료 ${dn.length}개</td></tr>`+dn.map(thin).join('');
@@ -126,7 +129,7 @@ function renderSet(){const s=S.set;$('#pSet').innerHTML=`<b>⚙ 설정</b>
  <div class="row"><label>기본 포인트</label><input id="sBase" type="number" value="${s.base}" style="width:90px"></div>
  ${s.names.map((n,i)=>`<div class="row"><label>${n} 배율</label><input data-mult="${i}" type="number" step="0.05" value="${s.mult[i]}" style="width:90px"><span class="mu">= ${Math.round(s.base*s.mult[i])}P</span></div>`).join('')}
 
- <div class="row"><label>초기화 시각</label><input id="sReset" type="time" value="${s.reset}"><span class="mu">KST (추정값)</span></div>
+ <div class="row"><label>완료 초기화</label><span class="mu">에린 자정(00:00)마다 · 현실 36분 주기 · 아래 에린 시계 보정 기준</span></div>
  <div class="row"><label>에린 시계 보정</label><input id="sOff" type="number" value="${S.erinOff||0}" style="width:90px"><span class="mu">에린 분</span></div>
  
  <div class="row"><button id="bEdit">${edit?'✔ 편집 끝':'✎ 편집'}</button><button id="bExp">내보내기</button><button id="bImp">가져오기</button><button id="bV1"${localStorage.getItem(V1KEY)?'':' disabled'}>v1 데이터</button><button id="bReset" class="red">초기화</button></div>`}
@@ -187,5 +190,5 @@ document.addEventListener('change',e=>{const t=e.target,d=t.dataset,num=v=>v==='
  const jr=t.closest('[data-jid]'),j=jr&&S.jobs.find(x=>x.id===jr.dataset.jid);if(j&&d.jf)return change(()=>j[d.jf]=t.value.trim())});
 document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'&&!e.target.matches('input')){e.preventDefault();doUndo()}if(e.key==='Escape')['#pSet','#pPrice','#pCombo'].forEach(p=>$(p).classList.add('hid'))});
 setInterval(()=>{if(document.querySelector('.pop:not(.hid)')||edit){$('#clock').textContent='에린 '+hm(erinMin());return}render()},1500);
-window.__alba={get S(){return S},isUla,seqPlan,shopOf,NAMEFIX,budget,erinMin,best,expandedSet,focus,ch,knap,mixOf,importV1};render();
+window.__alba={get S(){return S},isUla,erinAbs,erinDay,gameDay,seqPlan,shopOf,NAMEFIX,budget,erinMin,best,expandedSet,focus,ch,knap,mixOf,importV1};render();
 </script></body></html>
