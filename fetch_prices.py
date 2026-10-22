@@ -5,7 +5,7 @@ items.json의 모든 아이템 이름에 대해 Nexon Open API로 최저 단가�
 import json, os, sys, time, datetime, urllib.request, urllib.parse, urllib.error
 H = os.path.dirname(os.path.abspath(__file__))
 KEY = os.environ.get('NEXON_API_KEY') or sys.exit('NEXON_API_KEY 환경변수가 필요합니다')
-GAP = float(os.environ.get('GAP', '0.6'))
+GAP = float(os.environ.get('GAP', '0.1'))
 KST = datetime.timezone(datetime.timedelta(hours=9))
 now = lambda: datetime.datetime.now(KST).isoformat(timespec='seconds')
 items = json.load(open(f'{H}/items.json', encoding='utf-8'))

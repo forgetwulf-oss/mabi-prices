@@ -1,8 +1,7 @@
 name: update-prices
 on:
-  # 실행 주기: 아래 한 줄만 바꾸면 됨. 개발 키(1,000회/일)·약 181개 → 8시간마다(약 543회/일).
-  # 서비스 키로 바꾸면 예: '17 */2 * * *' (2시간마다)
-  schedule: [{cron: '17 */8 * * *'}]
+  # 실행 주기: 서비스 키(500 req/s, 2천만/일) → 매시간.
+  schedule: [{cron: '17 * * * *'}]
   workflow_dispatch:
 permissions: {contents: write}
 concurrency: {group: prices, cancel-in-progress: false}
