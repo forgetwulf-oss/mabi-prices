@@ -90,9 +90,11 @@ function repH(j){const p=repOf(j);if(!p)return'';const now=erinMin(),a=toM(p.r),
  return `<span class="rp${on?' on':''}${p.n?' nt':''}" title="${ttl}">보고 ${p.r}~${p.e}${!on&&rm<=15?' · '+rm+'분':''}</span>`}
 // 다음 순서: 지금부터 에린 시간으로, 접수 가능한 알바 중 보고 가능 시각이 가장 빠른 것을 이어 붙임(빈틈 없이).
 // 지양·오늘 완료 제외, 같은 종류(type)는 에린 하루(00:00 기준)에 1개만 (계정당 제한)
+// 울라 대륙 마을 (나무위키 '마비노기/NPC' 지역 분류 2.x 울라: 티르코네일·두갈드 아일·던바튼·카브 항구·반호르·이멘마하·탈틴·타라). 이리아(켈라·필리아·발레스·칼리다)·벨바스트는 제외
+const ULA=new Set(['티르코네일','티르코','두갈드 아일','던바튼','카브','반호르','이멘마하','탈틴','타라']);const isUla=j=>ULA.has(j.village);
 const SEQ_PAGE=10;let seqPage=0;
 function seqPlan(c,B,maxN=60){const now=Math.floor(Date.now()/1500+(S.erinOff||0));let t=now;const used=new Set(),tl={},iv={},out=[];
- const ty=j=>j.type||j.id,cand=S.jobs.filter(j=>!j.avoid&&!c.done.includes(j.id)&&toM(j.start)!=null&&toM(j.end)!=null);
+ const ty=j=>j.type||j.id,cand=S.jobs.filter(j=>(S.seqAll||isUla(j))&&!j.avoid&&!c.done.includes(j.id)&&toM(j.start)!=null&&toM(j.end)!=null);
  for(let n=0;n<maxN;n++){const rep={};// 종류별 대표: 이번 칸에 가능한 같은 종류 중 골드 최고
   for(const j of cand){if(used.has(j.id))continue;const s=toM(j.start);let e=toM(j.end);if(e<=s)e+=1440;const p=repOf(j);let r=p?toM(p.r):s;if(r<s)r+=1440;
    const d0=Math.floor((t-s)/1440);for(let d=d0;d<=d0+2;d++){const ws=d*1440+s,we=d*1440+e;if(we<=t)continue;const acc=Math.max(t,ws),day=Math.floor(acc/1440),k=ty(j);
@@ -106,8 +108,8 @@ function renderSeq(c,B){const L=seqPlan(c,B),pages=Math.max(1,Math.ceil(L.length
  const rm=m=>{const x=Math.round(m*1.5/60);return x<=0?'지금':x+'분 후'};
  const rows=L.slice(seqPage*SEQ_PAGE,(seqPage+1)*SEQ_PAGE).map((x,k)=>{const i=seqPage*SEQ_PAGE+k,b=best(x.j,B);
   return (x.gap>0?`<tr class="gap"><td></td><td colspan="6">⏳ 빈 시간 에린 ${hm(((x.acc-x.gap)%1440+1440)%1440)}–${hm(x.acc%1440)} (현실 ${Math.round(x.gap*1.5/60)}분)</td></tr>`:'')+
-  `<tr class="sqr" data-sq="${x.j.id}"><td class="ix">${i+1}</td><td class="tm">${x.acc===x.now?'지금':hm(x.acc%1440)} 접수 → <b>${hm(x.rep%1440)}</b> 보고 <span class="mu">(${rm(x.rep-x.now)} · ~${hm(x.end%1440)})</span></td><td>${x.j.village}</td><td>${npcH(x.j)}</td><td>${b?b.r.item:'<span class="tag">가격 미상</span>'}</td><td class="n gold">${b?'+'+fmt(b.g):''}</td><td><button class="chk" data-done="${x.j.id}" title="오늘 완료"></button></td></tr>`}).join('');
- $('#seq').innerHTML=`<div class="hd"><b>▶ 다음 순서</b><span class="mu">보고 가능 시각 순 · 빈틈 없이 이어서 · 지양/완료 제외 · 종류당 에린 하루 1개</span><span class="sp"></span><span class="mu" id="seqInfo">${L.length?`${seqPage*SEQ_PAGE+1}–${Math.min(L.length,(seqPage+1)*SEQ_PAGE)} / ${L.length}`:'남은 알바 없음'}</span><button class="tg" id="seqPrev"${seqPage?'':' disabled'}>◂ 이전</button><button class="tg" id="seqNext"${seqPage<pages-1?'':' disabled'}>다음 ▸</button></div><table><tbody>${rows}</tbody></table>`}
+  `<tr class="sqr" data-sq="${x.j.id}"><td class="ix">${i+1}</td><td class="tm">${x.acc===x.now?'지금':hm(x.acc%1440)} 접수 → <b>${hm(x.rep%1440)}</b> 보고 <span class="mu">(${rm(x.rep-x.now)} · ~${hm(x.end%1440)})</span></td><td>${x.j.village}${S.seqAll&&!isUla(x.j)?' <span class="tag">울라 밖</span>':''}</td><td>${npcH(x.j)}</td><td>${b?b.r.item:'<span class="tag">가격 미상</span>'}</td><td class="n gold">${b?'+'+fmt(b.g):''}</td><td><button class="chk" data-done="${x.j.id}" title="오늘 완료"></button></td></tr>`}).join('');
+ $('#seq').innerHTML=`<div class="hd"><b>▶ 다음 순서</b><span class="mu">보고 가능 시각 순 · 빈틈 없이 이어서 · 지양/완료 제외 · 종류당 에린 하루 1개</span><button class="tg${S.seqAll?'':' api'}" id="seqUla" title="다음 순서에 쓸 대륙 (기본: 울라만)">${S.seqAll?'전체 대륙':'울라만'}</button><span class="sp"></span><span class="mu" id="seqInfo">${L.length?`${seqPage*SEQ_PAGE+1}–${Math.min(L.length,(seqPage+1)*SEQ_PAGE)} / ${L.length}`:'남은 알바 없음'}</span><button class="tg" id="seqPrev"${seqPage?'':' disabled'}>◂ 이전</button><button class="tg" id="seqNext"${seqPage<pages-1?'':' disabled'}>다음 ▸</button></div><table><tbody>${rows}</tbody></table>`}
 function render(){const B=budget(),c=ch(),ids=expandedSet(B),f=focus(c,ids);renderSeq(c,B);
  $('#buffs').innerHTML=S.set.names.map((n,i)=>`<button class="chip${i==S.buff?' on':''}" data-buff="${i}" title="×${S.set.mult[i]} = ${Math.round(S.set.base*S.set.mult[i])}P">${n}</button>`).join('');
   let dg=0,rg=0;S.jobs.forEach(j=>{const b=best(j,B);if(!b)return;if(c.done.includes(j.id))dg+=b.g;else if(ids.has(j.id))rg+=b.g});
@@ -165,7 +167,7 @@ document.addEventListener('click',e=>{const t=e.target.closest('[data-buff],[dat
  const pop=(id,o)=>{['#pSet','#pPrice','#pCombo'].forEach(p=>$(p).classList.toggle('hid',p!==id||!o))};
  switch(t.id){case'bSet':pop('#pSet',$('#pSet').classList.contains('hid'));renderSet();break;case'bPrice':pop('#pPrice',$('#pPrice').classList.contains('hid'));renderPrice();break;
  case'bCombo':pop('#pCombo',$('#pCombo').classList.contains('hid'));renderCombo();break;case'bAll':change(()=>S.showAll=!S.showAll);break;
- case'seqPrev':seqPage=Math.max(0,seqPage-1);render();break;case'seqNext':seqPage++;render();break;
+ case'seqPrev':seqPage=Math.max(0,seqPage-1);render();break;case'seqNext':seqPage++;render();break;case'seqUla':seqPage=0;change(()=>S.seqAll=!S.seqAll,S.seqAll?'다음 순서: 울라만':'다음 순서: 전체 대륙');break;
  case'bUndo':doUndo();break;case'bEdit':edit=!edit;render();break;case'bFetch':fetchPrices();break;
  case'bAdd':change(()=>S.jobs.push({id:'u'+Date.now(),npc:'새 NPC',npcEn:'',village:'',type:'',start:'',end:'',report:'',note:'',rewards:[]}));break;
  case'bV1':try{const o=JSON.parse(localStorage.getItem(V1KEY));change(()=>S=oneChar(importV1(o)),'v1 데이터 가져옴')}catch(_){toast('v1 데이터 없음')}break;
@@ -189,5 +191,5 @@ document.addEventListener('change',e=>{const t=e.target,d=t.dataset,num=v=>v==='
  const jr=t.closest('[data-jid]'),j=jr&&S.jobs.find(x=>x.id===jr.dataset.jid);if(j&&d.jf)return change(()=>j[d.jf]=t.value.trim())});
 document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'&&!e.target.matches('input')){e.preventDefault();doUndo()}if(e.key==='Escape')['#pSet','#pPrice','#pCombo'].forEach(p=>$(p).classList.add('hid'))});
 setInterval(()=>{if(document.querySelector('.pop:not(.hid)')||edit){$('#clock').textContent='에린 '+hm(erinMin());return}render()},1500);
-window.__alba={get S(){return S},seqPlan,shopOf,NAMEFIX,budget,erinMin,best,expandedSet,focus,ch,knap,mixOf,importV1};render();
+window.__alba={get S(){return S},isUla,seqPlan,shopOf,NAMEFIX,budget,erinMin,best,expandedSet,focus,ch,knap,mixOf,importV1};render();
 </script></body></html>
