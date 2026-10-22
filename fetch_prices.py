@@ -9,38 +9,41 @@ GAP = float(os.environ.get('GAP', '0.6'))
 KST = datetime.timezone(datetime.timedelta(hours=9))
 now = lambda: datetime.datetime.now(KST).isoformat(timespec='seconds')
 items = json.load(open(f'{H}/items.json', encoding='utf-8'))
-names = sorted({n for v in items.values() for n in v})
+names = sorted({n for k, v in items.items() if not k.startswith('_') for n in v})
 out_p = f'{H}/docs/prices.json'
 try: old = json.load(open(out_p, encoding='utf-8')).get('prices', {})
 except Exception: old = {}
 
 def get(name):
     u = 'https://open.api.nexon.com/mabinogi/v1/auction/list?item_name=' + urllib.parse.quote(name)
-    for a in range(6):
+    for a in range(4):
         try:
             r = urllib.request.urlopen(urllib.request.Request(u, headers={'x-nxopen-api-key': KEY}), timeout=25)
             return json.load(r)
         except urllib.error.HTTPError as e:
             if e.code == 429 or e.code >= 500:
-                time.sleep(min(60, 3 * 2 ** a)); continue
+                time.sleep(min(30, 2 * 2 ** a)); continue
             if e.code == 400: return {'auction_item': []}
             raise
         except Exception:
             time.sleep(3 * (a + 1))
     raise RuntimeError('retries exhausted')
 
-prices, ok, fail, empty = {}, 0, 0, 0
+prices, ok, fail, empty, streak = {}, 0, 0, 0, 0
 for i, n in enumerate(names):
+    if streak >= 5:  # 일일 한도 소진 등: 남은 항목은 이전 값 유지하고 중단 (호출 낭비 방지)
+        if n in old: prices[n] = old[n]
+        continue
     try:
         its = [x for x in get(n).get('auction_item', []) if x.get('item_name') == n and x.get('auction_price_per_unit')]
         if its:
             prices[n] = {'min': min(x['auction_price_per_unit'] for x in its), 'count': sum(x.get('item_count', 1) for x in its), 't': now()}
-            ok += 1
+            ok += 1; streak = 0
         else:
-            empty += 1
+            empty += 1; streak = 0
             if n in old: prices[n] = old[n]
     except Exception as e:
-        fail += 1
+        fail += 1; streak += 1
         print(f'fail {n}: {type(e).__name__} {getattr(e, "code", "")}', file=sys.stderr)
         if n in old: prices[n] = old[n]
     print(f'[{i+1}/{len(names)}] {n}: {prices.get(n, {}).get("min")}')

@@ -1,0 +1,9 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>마비노기 경매장 공유 시세</title>
+<style>body{font-family:system-ui,sans-serif;max-width:640px;margin:40px auto;padding:0 16px;line-height:1.6;color:#222}code{background:#f2f2f2;padding:1px 4px}</style></head><body>
+<h1>마비노기 경매장 공유 시세 피드</h1>
+<p>마비노기(PC) 도우미 앱(물물교환 도우미, 아르바이트 도우미, 던전 통행증 트래커)이 함께 쓰는 경매장 시세 데이터입니다. 서버가 Nexon Open API 경매장 정보를 정해진 주기로 한 번만 조회해 JSON으로 게시하고, 각 앱은 API를 직접 호출하지 않고 이 파일을 읽습니다.</p>
+<p>데이터: <a href="prices.json">prices.json</a> — 형식 <code>{updated, prices: {아이템명: {min, count, t}}}</code> (min = 개당 최저가, count = 매물 수량)</p>
+<p id="u"></p>
+<p>소스: <a href="https://github.com/forgetwulf-oss/mabi-prices">github.com/forgetwulf-oss/mabi-prices</a> · Data based on NEXON Open API.</p>
+<script>fetch('prices.json').then(r=>r.json()).then(j=>{document.getElementById('u').textContent='마지막 갱신: '+(j.updated||'—')+' · '+Object.keys(j.prices||{}).length+'종'}).catch(()=>{})</script>
+</body></html>
