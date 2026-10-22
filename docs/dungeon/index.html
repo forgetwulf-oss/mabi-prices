@@ -170,6 +170,50 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
 .cfg{grid-template-columns:repeat(auto-fill,minmax(245px,1fr))}
 .cfg input{width:76px}
 .cfg label>span{white-space:nowrap;flex:none}
+.head .badge{display:inline-block;margin-top:8px;padding:3px 12px;border-radius:999px;font-size:13px;font-weight:800;color:#2a2040;background:linear-gradient(90deg,#f7d98b,#e9bf5c)}
+.wl{display:flex;align-items:center;gap:10px;margin:-6px 0 14px;padding:8px 12px;border-radius:12px;background:rgba(247,217,139,.07);border:1px solid rgba(247,217,139,.22)}
+.wl .wlab{font-size:14px;font-weight:800;color:#e9dcb4;flex:none}
+.wl .wv{flex:1;text-align:right;font-size:20px;font-weight:800;color:#f7d98b;padding:2px 6px;border-radius:8px;min-height:30px}
+.wl .wv:hover{background:rgba(247,217,139,.12)}
+.wl .wv.unset{font-size:14px;font-weight:700;color:#9f98c9}
+.wl .wv .ed{font-size:12px;margin-left:6px;opacity:.6}
+.wl input{flex:1;min-width:0;text-align:right;padding:6px 10px;border-radius:8px;border:1px solid rgba(247,217,139,.6);background:rgba(0,0,0,.35);color:#fff3cf;font:inherit;font-size:17px;font-weight:800}
+.wl input:focus{outline:2px solid rgba(247,217,139,.6);border-color:transparent}
+.wl .hint{font-size:12px;color:#9f98c9;flex:none}
+.foot .wealth{color:#f7d98b}
+.banner{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px;margin:0 auto 18px;padding:12px 16px;border-radius:14px;background:rgba(247,217,139,.10);border:1px solid rgba(247,217,139,.45);font-size:15px;color:#fff3cf}
+.banner[hidden]{display:none}
+@media (max-width:640px){.wl .wv{font-size:17px}.wl .hint{display:none}}
+.wl .wi{flex:1;display:flex;align-items:center;gap:6px;min-width:0}
+.wl .wu{font-size:17px;font-weight:800;color:#f7d98b;flex:none}
+.wl .whb{flex:none;font-size:12px;font-weight:700;color:#d9d2ff;padding:5px 9px;border-radius:999px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12)}
+.wl .whb:hover{background:rgba(247,217,139,.15);color:#fff}
+.wl .whb b{color:#f7d98b;margin-left:2px}
+.cbar{display:flex;justify-content:flex-end;margin:-8px 0 6px}
+.cbar .fa{font-size:12px;font-weight:700;color:#9f98c9;padding:3px 8px;border-radius:999px}
+.cbar .fa:hover{color:#fff;background:rgba(255,255,255,.07)}
+button.r1{width:100%;text-align:left;padding:0;cursor:pointer;border-radius:8px}
+button.r1:focus-visible{outline:2px solid #f7d98b;outline-offset:3px}
+.r1 .fi{display:inline-block;width:16px;font-size:12px;color:#8c85b8;margin-right:2px}
+button.r1:hover .fi{color:#f7d98b}
+.row.folded{padding:9px 14px;background:rgba(0,0,0,.18)}
+.row.folded .dn{font-size:16px;color:#cfc8f2}
+.row.folded .st{font-size:14px}
+.hk{font-size:13px;margin-left:6px}
+.modal .spark{margin:10px 0 6px;padding:8px 8px 4px;border-radius:10px;background:rgba(0,0,0,.25)}
+.modal .spark svg{display:block;width:100%;height:70px}
+.modal .sl{display:flex;justify-content:space-between;font-size:11px;color:#9f98c9;margin-top:2px}
+.whl{list-style:none;margin-top:8px;max-height:46vh;overflow:auto;border-radius:10px;background:rgba(0,0,0,.2)}
+.whl li{display:grid;grid-template-columns:86px 1fr auto 28px;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid rgba(255,255,255,.06);font-size:14px}
+.whl li:last-child{border-bottom:0}
+.whl .wt{color:#9f98c9;font-variant-numeric:tabular-nums}
+.whl .wn{color:#f7d98b;font-weight:800;text-align:right}
+.whl .wd{min-width:70px;text-align:right}
+.whl .dim{color:#8c85b8;font-size:12px}
+.whl .wx{width:26px;height:26px;border-radius:8px;color:#8c85b8;background:rgba(255,255,255,.05)}
+.whl .wx:hover{color:#ff7a8a;background:rgba(229,72,93,.15)}
+.modal .wnow{color:#f7d98b}
+.modal:has(.whl), .modal:has(.whe){max-width:520px}
 .cyw{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:6px 0 0}.cy{display:flex;align-items:center;gap:6px;padding:5px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.55);background:rgba(255,255,255,.04);color:#f3efff;font:inherit;font-size:13px;cursor:pointer}.cy b{color:#ffe7a3}.cy small{color:#a9a2d4;font-size:11.5px}.cy:hover{background:rgba(255,255,255,.1)}.cyb{padding:4px 8px;border-radius:8px;border:1px solid rgba(255,255,255,.18);background:transparent;color:#a9a2d4;font:inherit;font-size:12px;cursor:pointer}.cyb:hover{color:#f3efff;border-color:rgba(255,255,255,.4)}
 #homeLink{display:inline-block;color:#a9a2d4;font-size:12.5px;text-decoration:none;margin-bottom:6px}#homeLink:hover{color:#ffe7a3;text-decoration:underline}
 .card .ib.del{opacity:0;transition:opacity .15s}.card:hover .ib.del,.card .ib.del:focus{opacity:1}.card .name{cursor:context-menu}
@@ -180,6 +224,7 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
   <a id="homeLink" href="https://mabi-life.github.io/" title="생활도우미 메인으로">← 생활도우미</a>
   <header class="head">
     <h1>✦ 이번 주 던전 통행증 현황 ✦</h1>
+    <span class="badge">💰 전재산 버전</span>
     <p id="period"></p>
     <p class="sub" id="resetNote"></p>
   </header>
@@ -190,6 +235,7 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
     <button class="btn" data-act="feed" title="공유 시세(mabi-life.github.io)에서 균열의 편린 최저가 불러오기">📈 편린 시세</button>
     <button class="btn" data-act="openSettings">⚙️ 설정 · 사용법</button>
   </div>
+  <div class="banner" id="banner" hidden></div>
   <section class="keys" id="keys" aria-label="남은 무료 키 · 보유 키"></section>
   <main class="grid" id="grid"></main>
   <div class="legend">
@@ -215,6 +261,10 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
       <ul>
         <li>주간 초기화: <b>매주 목요일 <span id="rh2"></span></b> (한국 시간 기준). 새 주가 시작된 뒤 앱을 열면 진행 기록이 자동으로 초기화되고 캐릭터는 유지돼요.</li>
         <li>초기화 시각은 스크립트 맨 위 <b>RESET_HOUR</b> 상수로 바꿀 수 있어요.</li>
+        <li><b>전재산</b>은 캐릭터 카드의 💰 전재산을 눌러 <b>만 골드 단위 숫자</b>로 입력해요 (예: <b>5230</b> → 5,230만, <b>12500</b> → 1억 2,500만). <b>1억 2500</b>, <b>1.5억</b>도 돼요. 비우고 Enter를 누르면 지워져요. 주간 초기화로 지워지지 않아요.</li>
+        <li>전재산을 바꿀 때마다 <b>📜 내역</b>에 시각·금액·증감이 쌓여요 (캐릭터별 최근 100개). 내역에서 하나씩 또는 전부 지울 수 있고, 내보내기·되돌리기에 포함돼요.</li>
+        <li>던전 이름을 누르면 그 행을 <b>접고 펼칠</b> 수 있어요 (▾/▸). 카드의 <b>모두 접기</b>로 한 번에. 접은 상태는 이 브라우저에 저장돼요.</li>
+        <li>이 전재산 버전은 기본 버전과 <b>따로 저장</b>돼요 (같은 브라우저에서 함께 써도 서로 덮어쓰지 않아요). 기본 버전 기록은 <b>기본 버전 기록 가져오기</b>로 복사할 수 있어요.</li>
         <li>데이터는 이 브라우저의 localStorage에만 저장돼요. 다른 기기로 옮기려면 <b>내보내기</b> → 다른 기기에서 <b>가져오기</b>.</li>
         <li>골드(<span class="cost">지출</span>)는 키를 구매한 순간, 보상(<span class="gain">수입</span>)은 키를 사용(입장)한 순간 계산돼요. 크롬바스는 기본키만 기록해요.</li>
         <li>가격표(회차별): 10만 · 20만 · 40만 · 70만 · 100만 · 200만 · 300만 · 500만 · 700만 · 1,000만 / 글렌베르나 추가키 125만 · 375만</li>
@@ -229,6 +279,7 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
         <button class="btn" data-act="export">⬆ 내보내기</button>
         <button class="btn" data-act="import">⬇ 가져오기</button>
         <button class="btn danger" data-act="resetWeek">↺ 이번 주 초기화</button>
+        <button class="btn" data-act="importMain">기본 버전 기록 가져오기</button>
         <button class="btn danger" data-act="wipe">모든 데이터 삭제</button>
       </div>
     </div>
@@ -245,10 +296,15 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
 var RESET_HOUR = 6;            // 주간 초기화 시각 (한국 시간, 목요일)
 var RESET_DOW = 4;             // 0=일 … 4=목
 var KST_OFFSET_MS = 9 * 3600 * 1000;
-var STORAGE_KEY = 'mabiPassTracker.v1';
+var STORAGE_KEY = 'mabiPassTracker.wealth.v1';        // 전재산 버전 전용 (기본 버전과 따로 저장)
+var MAIN_KEY = 'mabiPassTracker.v1';                  // 기본 버전 저장 키 (읽기 전용으로 가져오기만)
 var DEFAULT_CHARS = ['캐릭터 1'];  /* 저장 데이터가 없을 때 기본 캐릭터 (배포본은 publish.py가 1명으로 바꿈) */
 var FEED = 'https://mabi-life.github.io/prices.json';
-var DATA_VERSION = 4;
+var MAIN_ASKED_KEY = 'mabiPassTracker.wealth.mainImportAsked';
+var WEALTH_MAX = 1e13;
+var WH_MAX = 100;                                      // 캐릭터별 전재산 변경 내역 최대 개수
+var FOLD_KEY = 'mabiPassTracker.wealth.fold';          // 던전 행 접기 상태 (화면 설정, 되돌리기·내보내기와 무관)
+var DATA_VERSION = 5;
 var MAN = 10000;
 
 var PRICES = [100000,200000,400000,700000,1000000,2000000,3000000,5000000,7000000,10000000];
@@ -326,6 +382,28 @@ function normTwo(v, max){
   if (v && typeof v === 'object'){ var b=clampInt(v.b,0,max); return {b:b, u:clampInt(v.u,0,b), c:clampInt(v.c,0,max), cu:clampInt(v.cu,0,max)}; }
   var n=clampInt(v,0,max); return {b:n, u:n, c:0, cu:0};
 }
+/* 전재산: 골드 정수 또는 null(미입력) */
+function normWealth(v){ if (v===null || v===undefined || v==='') return null; v=Number(v); return (isFinite(v) && v>=0) ? Math.min(WEALTH_MAX, Math.round(v)) : null; }
+/* 전재산 입력 (기본 단위 = 만 골드) → 골드 정수.
+   '5230' → 5,230만 · '12,500' → 1억 2,500만 · '5230.5' → 5,231만(만 단위 반올림)
+   '1억 2500' / '1억 2500만' / '1억2천만' / '1.5억' 도 가능. 빈 값 → null, 해석 불가 → NaN */
+var MAN_UNITS = {'억':1e4,'천만':1e3,'만':1,'':1};       // 만 단위 배수
+function parseWealthMan(str){
+  var t=String(str==null?'':str).replace(/[\s,]/g,'').replace(/(골드|G)$/i,'');
+  if (t==='') return null;
+  var re=/(\d+(?:\.\d+)?)(억|천만|만)?/g, m, man=0, pos=0, any=false, bare=0;
+  while ((m=re.exec(t)) && m.index===pos){ if(!m[2]) bare++; man += parseFloat(m[1]) * MAN_UNITS[m[2]||'']; pos = re.lastIndex; any=true; }
+  if (!any || pos!==t.length || bare>1) return NaN;
+  var g=Math.round(man)*MAN;
+  return g>WEALTH_MAX ? NaN : g;
+}
+/* 전재산 변경 내역: [{t: 시각(ms), o: 이전(골드|null), n: 새 값(골드|null)}] 오래된 것 → 최신 */
+function normWH(a){
+  if (!Array.isArray(a)) return [];
+  return a.filter(function(e){ return e && isFinite(Number(e.t)); })
+          .map(function(e){ return {t:Math.round(Number(e.t)), o:normWealth(e.o), n:normWealth(e.n)}; })
+          .sort(function(x,y){ return x.t-y.t; }).slice(-WH_MAX);
+}
 function normChar(c){
   c = c || {};
   var p = c.p || {}, gx;
@@ -339,6 +417,8 @@ function normChar(c){
     id: typeof c.id==='string' && c.id ? c.id : uid(),
     name: String(c.name==null?'':c.name).slice(0,30) || '이름 없음',
     job: String(c.job==null?'':c.job).slice(0,20),
+    wealth: normWealth(c.wealth),
+    wh: normWH(c.wh),
     p: {
       crom: clampInt(p.crom,0,10),
       abyss: normTwo(p.abyss,10),
@@ -362,13 +442,21 @@ function load(){
   try{
     var raw = localStorage.getItem(STORAGE_KEY);
     if (raw){ var obj = JSON.parse(raw); state = normState(obj); if (obj.version !== DATA_VERSION) save(); }
-    else state.chars = DEFAULT_CHARS.map(function(n){ return normChar({name:n, p:blankProgress()}); });
+    else { var m=readMain(); if (m){ state=normState(m, null); try{ localStorage.setItem(MAIN_ASKED_KEY,'1'); }catch(e){} save(); }  /* 예전 사이트(기본 버전, mabiPassTracker.v1) 기록 자동 이전 · 원본 키는 그대로 둠 */
+    else state.chars = DEFAULT_CHARS.map(function(n){ return normChar({name:n, p:blankProgress()}); }); }
   }catch(e){ storageOk = false; }
 }
 function save(){
   try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); storageOk = true; }
   catch(e){ if (storageOk){ storageOk = false; toast('저장소를 사용할 수 없어 새로고침하면 기록이 사라져요'); } }
 }
+/* ===== 던전 행 접기 (캐릭터 id별, 별도 저장) ===== */
+var fold = {};
+function loadFold(){ try{ var o=JSON.parse(localStorage.getItem(FOLD_KEY)||'{}'); fold=(o&&typeof o==='object')?o:{}; }catch(e){ fold={}; } }
+function saveFold(){ try{ localStorage.setItem(FOLD_KEY, JSON.stringify(fold)); }catch(e){} }
+function isFolded(c, key){ return !!(fold[c.id] && fold[c.id][key]); }
+function setFold(c, key, v){ if(!fold[c.id]) fold[c.id]={}; if(v) fold[c.id][key]=true; else delete fold[c.id][key]; if(!Object.keys(fold[c.id]).length) delete fold[c.id]; saveFold(); }
+function allFolded(c){ return DUNGEONS.every(function(d){ return isFolded(c,d.key); }); }
 /* 주간 초기화: 사 두고 안 쓴 키 + 남은 이월 키 → 다음 주 이월. 지난주에 낸 돈이라 지출·가격 단계에는 안 들어감 */
 function carryOf(t, max){ return Math.max(0, Math.min(max, (t.b-t.u)+(t.c||0))); }
 function clearProgress(){ state.chars.forEach(function(c){ var o=c.p, n=blankProgress(); Object.keys(TWO_STAGE).forEach(function(k){ if(o&&o[k]) n[k].c=carryOf(o[k], TWO_STAGE[k]); }); c.p=n; }); }
@@ -493,15 +581,65 @@ function rowHtml(c, ci, d){
     }
     nx = parts2(gp);
   }
-  return '<div class="row'+(d.type==='rift'?' rift':'')+'" data-key="'+d.key+'"><div class="r1"><span class="dn">'+d.name+(d.sub?'<small>'+d.sub+'</small>':'')+'</span><span class="st">'+st+'</span></div>'+bar+
-         '<div class="nxw"><div class="nx">'+nx+'</div>'+rowActs(ci, d.key)+'</div></div>';
+  var fo=isFolded(c, d.key);
+  if (fo && ds.held>0) st += ' <span class="hk" title="보유 키">🔑'+ds.held+'</span>';
+  return '<div class="row'+(d.type==='rift'?' rift':'')+(fo?' folded':'')+'" data-key="'+d.key+'">'+
+         '<button type="button" class="r1" data-act="fold" data-c="'+ci+'" data-d="'+d.key+'" aria-expanded="'+(!fo)+'" title="'+(fo?'펼치기':'접기')+'">'+
+         '<span class="dn"><span class="fi">'+(fo?'▸':'▾')+'</span>'+d.name+(d.sub?'<small>'+d.sub+'</small>':'')+'</span><span class="st">'+st+'</span></button>'+
+         (fo ? '' : bar+'<div class="nxw"><div class="nx">'+nx+'</div>'+rowActs(ci, d.key)+'</div>')+'</div>';
 }
+var wealthEditing = null;   // 편집 중인 캐릭터 id
+function fmtWealth(g){ return g>=MAN ? fmtGold(g) : g.toLocaleString('ko-KR'); }
+function wealthHtml(c, ci){
+  var h='<div class="wl"><span class="wlab">💰 전재산</span>';
+  if (wealthEditing === c.id){
+    h+='<span class="wi"><input type="text" inputmode="decimal" autocomplete="off" data-wealth="'+ci+'" value="'+(c.wealth==null?'':Math.round(c.wealth/MAN))+'" placeholder="예: 5230" aria-label="전재산 (만 골드 단위)"><span class="wu">만</span></span><span class="hint">Enter 저장 · Esc 취소</span>';
+  } else if (c.wealth==null){
+    h+='<button type="button" class="wv unset" data-act="wealthEdit" data-c="'+ci+'">눌러서 입력 (만 단위) ✎</button>';
+  } else {
+    h+='<button type="button" class="wv" data-act="wealthEdit" data-c="'+ci+'" title="'+c.wealth.toLocaleString('ko-KR')+' G · 눌러서 수정">'+fmtWealth(c.wealth)+' G<span class="ed">✎</span></button>';
+  }
+  h+='<button type="button" class="whb" data-act="whOpen" data-c="'+ci+'" title="전재산 변경 내역">📜 내역'+(c.wh.length?' <b>'+c.wh.length+'</b>':'')+'</button>';
+  return h+'</div>';
+}
+function startWealthEdit(ci){
+  var c=state.chars[ci]; if(!c) return;
+  wealthEditing=c.id; render();
+  var inp=document.querySelector('[data-wealth="'+ci+'"]'); if(inp){ inp.focus(); inp.select(); }
+}
+function commitWealth(inp){
+  var ci=parseInt(inp.getAttribute('data-wealth'),10), c=state.chars[ci];
+  if (!c || wealthEditing!==c.id) return true;
+  var v=parseWealthMan(inp.value);
+  if (typeof v==='number' && isNaN(v)){ toast('금액을 알 수 없어요 · 만 단위 숫자로 입력 (예: 5230 → 5,230만)'); return false; }
+  wealthEditing=null;
+  if (v !== c.wealth) mutate(function(){
+    c.wh.push({t:Date.now(), o:c.wealth, n:v});
+    if (c.wh.length > WH_MAX) c.wh.splice(0, c.wh.length - WH_MAX);
+    c.wealth=v;
+  });
+  save(); render();
+  return true;
+}
+function cancelWealth(){ wealthEditing=null; render(); }
+document.addEventListener('keydown', function(e){
+  var inp=e.target; if(!inp.getAttribute || inp.getAttribute('data-wealth')===null) return;
+  if (e.key==='Enter'){ e.preventDefault(); if(!commitWealth(inp)) { inp.focus(); } }
+  else if (e.key==='Escape'){ e.preventDefault(); cancelWealth(); }
+});
+document.addEventListener('focusout', function(e){
+  var inp=e.target; if(!inp.getAttribute || inp.getAttribute('data-wealth')===null) return;
+  if (wealthEditing!==null && !commitWealth(inp)) cancelWealth();
+});
 function cardHtml(c, ci){
   var t=charTotals(c);
   var h='<section class="card a'+(ci%4)+'" data-cid="'+esc(c.id)+'"><div class="ct"><div class="nm"><span class="name" data-c="'+ci+'" title="'+esc(c.name)+' (우클릭/더블클릭: 이름 변경)">'+esc(c.name)+'</span>'+(c.job?'<span class="job" title="'+esc(c.job)+'">'+esc(c.job)+'</span>':'')+'</div>'+
         '<div class="cr"><div class="gsum"><div class="gold"><small>지출</small> '+fmtGold(t.spent)+' G</div><div class="csub">순이익 '+fmtPL(t.profit)+'</div></div>'+
         '<button type="button" class="ib" data-act="edit" data-c="'+ci+'" aria-label="이름 변경" title="이름/직업 변경">✏️</button>'+
         (state.chars.length>1?'<button type="button" class="ib del" data-act="del" data-c="'+ci+'" aria-label="삭제" title="캐릭터 삭제">✕</button>':'')+'</div></div>';
+  h+=wealthHtml(c, ci);
+  var af=allFolded(c);
+  h+='<div class="cbar"><button type="button" class="fa" data-act="foldAll" data-c="'+ci+'">'+(af?'▾ 모두 펼치기':'▴ 모두 접기')+'</button></div>';
   DUNGEONS.forEach(function(d){ h+=rowHtml(c,ci,d); });
   return h+'</section>';
 }
@@ -521,7 +659,8 @@ function render(){
   renderKeys();
   var tot=state.chars.reduce(function(a,c){ var t=charTotals(c); a.spent+=t.spent; a.profit+=t.profit; return a; },{spent:0,profit:0});
   var label = state.chars.length>1 ? '전체 '+state.chars.length+'캐릭터' : '이번 주';
-  document.getElementById('foot').innerHTML = '<div id="totalLine">💰 '+label+' 지출 <span class="cost">'+fmtGold(tot.spent)+' G</span> · 순이익 '+fmtPL(tot.profit)+'</div><div>⏳ 다음 리셋 <span>'+md(wk.end)+' '+hhmm(RESET_HOUR)+'</span></div>';
+  var wsum=0, wset=0; state.chars.forEach(function(c){ if(c.wealth!=null){ wsum+=c.wealth; wset++; } });
+  document.getElementById('foot').innerHTML = '<div id="wealthLine">💰 전재산 합계 <span class="wealth">'+(wset?fmtWealth(wsum)+' G':'—')+'</span></div><div id="totalLine">💸 '+label+' 지출 <span class="cost">'+fmtGold(tot.spent)+' G</span> · 순이익 '+fmtPL(tot.profit)+'</div><div>⏳ 다음 리셋 <span>'+md(wk.end)+' '+hhmm(RESET_HOUR)+'</span></div>';
 }
 
 /* ===== 남은 무료 키 · 보유 키 요약 ===== */
@@ -620,7 +759,7 @@ function rowClear(ci, key){
 /* ===== 모달 ===== */
 var mask=document.getElementById('mask'), modal=document.getElementById('modal');
 function openModal(html, onReady){ modal.innerHTML=html; mask.hidden=false; if(onReady) onReady(modal); }
-function closeModal(){ mask.hidden=true; modal.innerHTML=''; }
+function closeModal(){ mask.hidden=true; modal.innerHTML=''; whChar=null; }
 mask.addEventListener('click', function(e){ if(e.target===mask) closeModal(); });
 document.addEventListener('keydown', function(e){
   if(e.key==='Escape' && !mask.hidden){ closeModal(); return; }
@@ -655,7 +794,7 @@ function charForm(ci){
 }
 
 function exportJson(){
-  return JSON.stringify({app:'mabinogi-pass-tracker', version:DATA_VERSION, exportedAt:new Date().toISOString(), weekStart:state.weekStart, settings:state.settings, chars:state.chars}, null, 2);
+  return JSON.stringify({app:'mabinogi-pass-tracker', variant:'wealth', version:DATA_VERSION, exportedAt:new Date().toISOString(), weekStart:state.weekStart, settings:state.settings, chars:state.chars}, null, 2);
 }
 function copyText(text, ta){
   var ok=false;
@@ -672,7 +811,7 @@ function download(text){
     var blob=new Blob([text],{type:'application/json'});
     var a=document.createElement('a');
     a.href=URL.createObjectURL(blob);
-    a.download='mabinogi-pass-'+(state.weekStart||'data')+'.json';
+    a.download='mabinogi-pass-wealth-'+(state.weekStart||'data')+'.json';
     document.body.appendChild(a); a.click();
     setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },500);
   }catch(e){ toast('파일 저장에 실패했어요. 복사를 이용해 주세요'); }
@@ -753,6 +892,16 @@ document.addEventListener('click', function(e){
     case 'feed': loadFeed(); break;
     case 'export': exportModal(); break;
     case 'import': importModal(); break;
+    case 'wealthEdit': startWealthEdit(ci); break;
+    case 'whOpen': whOpen(ci); break;
+    case 'fold':
+      var fc=state.chars[ci], fk=el.getAttribute('data-d'); if(fc){ setFold(fc, fk, !isFolded(fc, fk)); render(); }
+      break;
+    case 'foldAll':
+      var ac=state.chars[ci]; if(ac){ var to=!allFolded(ac); DUNGEONS.forEach(function(d){ setFold(ac, d.key, to); }); render(); }
+      break;
+    case 'importMain': importMain(false); break;
+    case 'dismissMain': try{ localStorage.setItem(MAIN_ASKED_KEY,'1'); }catch(err){} showBanner(); break;
   }
 });
 
@@ -768,19 +917,101 @@ function loadFeed(){
   }).catch(function(){ toast('공유 시세를 불러오지 못했어요'); });
 }
 /* 다른 탭에서 변경 시 동기화 */
-window.addEventListener('storage', function(e){ if(e.key===STORAGE_KEY){ load(); checkWeek(true); render(); renderCfg(); } });
+window.addEventListener('storage', function(e){ if(e.key===FOLD_KEY){ loadFold(); render(); } if(e.key===STORAGE_KEY){ load(); checkWeek(true); render(); renderCfg(); } });
 /* 열어둔 채로 리셋 시각이 지나면 자동 초기화 */
 function tick(){ if(checkWeek(false)) render(); }
 setInterval(tick, 60000);
 document.addEventListener('visibilitychange', function(){ if(!document.hidden){ tick(); render(); } });
 
-/* 테스트용 노출 (데이터 없음) */
-window.__passTracker = {weekInfo:weekInfo, fmtGold:fmtGold, charGold:charGold, charTotals:charTotals, riftCost:riftCost, normState:normState, undo:undo, histLen:function(){return hist.length;}, getState:function(){return state;}};
+/* ===== 전재산 변경 내역 ===== */
+function kstStamp(ms){
+  var d=new Date(ms+KST_OFFSET_MS), now=new Date(Date.now()+KST_OFFSET_MS);
+  var s=pad(d.getUTCMonth()+1)+'/'+pad(d.getUTCDate())+' '+pad(d.getUTCHours())+':'+pad(d.getUTCMinutes());
+  return d.getUTCFullYear()!==now.getUTCFullYear() ? String(d.getUTCFullYear()).slice(2)+'/'+s : s;
+}
+function fmtDiff(g){
+  var neg=g<0, a=Math.abs(g);
+  return '<span class="'+(neg?'m':'p')+'">'+(neg?'−':'+')+fmtWealth(a)+'</span>';
+}
+function sparkline(wh){
+  var pts=wh.filter(function(e){ return e.n!=null; });
+  if (pts.length<2) return '';
+  var W=420, H=70, P=6, min=Infinity, max=-Infinity;
+  pts.forEach(function(e){ min=Math.min(min,e.n); max=Math.max(max,e.n); });
+  if (max===min){ max+=1; min-=1; }
+  var xy=pts.map(function(e,i){ return [P+(W-2*P)*i/(pts.length-1), P+(H-2*P)*(1-(e.n-min)/(max-min))]; });
+  var line=xy.map(function(q){ return q[0].toFixed(1)+','+q[1].toFixed(1); }).join(' ');
+  var area='M'+xy[0][0].toFixed(1)+','+(H-P)+' L'+line.replace(/ /g,' L')+' L'+xy[xy.length-1][0].toFixed(1)+','+(H-P)+' Z';
+  var last=xy[xy.length-1], up=pts[pts.length-1].n>=pts[0].n;
+  return '<div class="spark"><svg viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none" aria-hidden="true">'+
+    '<path d="'+area+'" fill="rgba(247,217,139,.12)"/><polyline points="'+line+'" fill="none" stroke="#f7d98b" stroke-width="2" vector-effect="non-scaling-stroke"/>'+
+    '<circle cx="'+last[0].toFixed(1)+'" cy="'+last[1].toFixed(1)+'" r="3.5" fill="'+(up?'#7ee0b5':'#ff7a8a')+'"/></svg>'+
+    '<div class="sl"><span>최저 '+fmtWealth(min<0?0:Math.round(min))+'</span><span>최근 '+pts.length+'회 추이</span><span>최고 '+fmtWealth(Math.round(max))+'</span></div></div>';
+}
+var whChar = null;   // 열려 있는 내역의 캐릭터 id
+function whIndex(){ for(var i=0;i<state.chars.length;i++) if(state.chars[i].id===whChar) return i; return -1; }
+function whRender(){
+  var ci=whIndex(); if(ci<0){ closeModal(); return; }
+  var c=state.chars[ci], rows='';
+  for (var i=c.wh.length-1;i>=0;i--){
+    var e=c.wh[i], diff=(e.o!=null && e.n!=null) ? fmtDiff(e.n-e.o) : '<span class="dim">'+(e.n==null?'지움':'처음 입력')+'</span>';
+    rows+='<li><span class="wt">'+kstStamp(e.t)+'</span><span class="wn">'+(e.n==null?'—':fmtWealth(e.n)+' G')+'</span><span class="wd">'+diff+'</span>'+
+          '<button type="button" class="wx" data-wh-del="'+i+'" aria-label="이 기록 삭제" title="이 기록 삭제">✕</button></li>';
+  }
+  var first=c.wh.length?c.wh[0]:null, lastv=c.wealth;
+  var tot=(first && first.o!=null && lastv!=null) ? fmtDiff(lastv-first.o) : ((first && first.n!=null && lastv!=null) ? fmtDiff(lastv-first.n) : '');
+  modal.innerHTML='<h3>📜 '+esc(c.name)+' · 전재산 내역</h3>'+
+    '<p class="note">현재 <b class="wnow">'+(c.wealth==null?'—':fmtWealth(c.wealth)+' G')+'</b>'+(tot?' · 기록 기간 변화 '+tot:'')+' · 최근 '+WH_MAX+'개까지 저장 (한국 시간)</p>'+
+    sparkline(c.wh)+
+    (c.wh.length ? '<ul class="whl">'+rows+'</ul>' : '<p class="note whe">아직 기록이 없어요. 전재산을 입력하면 바뀔 때마다 여기에 쌓여요.</p>')+
+    '<div class="acts">'+(c.wh.length?'<button type="button" class="btn danger" id="whClear">내역 모두 지우기</button>':'')+'<button type="button" class="btn gold" data-m="close">닫기</button></div>';
+  var cl=modal.querySelector('#whClear');
+  if (cl) cl.onclick=function(){
+    if(!confirm('‘'+c.name+'’ 전재산 내역 '+c.wh.length+'개를 모두 지울까요? (전재산 값은 그대로 · 되돌리기 가능)')) return;
+    mutate(function(){ c.wh=[]; }); save(); render(); whRender(); toast('내역을 모두 지웠어요');
+  };
+}
+function whOpen(ci){ var c=state.chars[ci]; if(!c) return; whChar=c.id; mask.hidden=false; whRender(); }
+modal.addEventListener('click', function(e){
+  var b=e.target.closest('[data-wh-del]'); if(!b) return;
+  var ci=whIndex(); if(ci<0) return;
+  var c=state.chars[ci], i=parseInt(b.getAttribute('data-wh-del'),10);
+  if (!c.wh[i]) return;
+  mutate(function(){ c.wh.splice(i,1); }); save(); render(); whRender(); toast('기록 1개를 지웠어요');
+});
 
+/* ===== 기본 버전 기록 가져오기 ===== */
+function readMain(){ try{ var raw=localStorage.getItem(MAIN_KEY); if(!raw) return null; var o=JSON.parse(raw); return (o && Array.isArray(o.chars) && o.chars.length) ? o : null; }catch(e){ return null; } }
+function mainAsked(){ try{ return localStorage.getItem(MAIN_ASKED_KEY)==='1'; }catch(e){ return true; } }
+function showBanner(){
+  var b=document.getElementById('banner'), m=readMain();
+  if (m && !state.chars.length && !mainAsked()){
+    b.innerHTML='📥 같은 브라우저에 기본 버전 기록이 있어요 (캐릭터 '+m.chars.length+'명). <button class="btn gold" data-act="importMain">기본 버전 기록 가져오기</button><button class="btn" data-act="dismissMain">괜찮아요</button>';
+    b.hidden=false;
+  } else { b.hidden=true; b.innerHTML=''; }
+}
+function importMain(){
+  var m=readMain();
+  if (!m){ toast('기본 버전 기록이 없어요'); return; }
+  if (state.chars.length && !confirm('현재 전재산 버전 기록을 기본 버전 기록('+m.chars.length+'명)으로 덮어쓸까요?\n(전재산 값은 비워져요 · 되돌리기 가능)')) return;
+  var before=snap();
+  state=normState(m, null);
+  checkWeek(true);
+  pushHist(before); save();
+  try{ localStorage.setItem(MAIN_ASKED_KEY,'1'); }catch(e){}
+  render(); renderCfg(); showBanner();
+  toast('기본 버전 기록을 가져왔어요 ('+state.chars.length+'명) · 전재산을 입력해 주세요');
+}
+
+/* 테스트용 노출 (데이터 없음) */
+window.__passTracker = {weekInfo:weekInfo, fmtGold:fmtGold, charGold:charGold, charTotals:charTotals, riftCost:riftCost, normState:normState, parseWealthMan:parseWealthMan, kstStamp:kstStamp, fold:function(){return fold;}, undo:undo, histLen:function(){return hist.length;}, getState:function(){return state;}};
+
+loadFold();
 load();
 checkWeek(false);
 render();
 renderCfg();
+showBanner();
 })();
 </script>
 </body>
