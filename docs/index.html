@@ -3,7 +3,7 @@
 *{box-sizing:border-box}body{margin:0;background:#111418;color:#e6e8eb;font-family:"Pretendard","Malgun Gothic",system-ui,sans-serif;line-height:1.65}
 main{max-width:960px;margin:0 auto;padding:64px 24px 32px}h1{font-size:40px;margin:0 0 8px}.intro{color:#9aa3ad;font-size:18px;margin:0 0 40px}
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;margin-bottom:48px}
-.card{background:#1a1f26;border:1px solid #2a313b;border-radius:12px;padding:24px}.card h2{margin:0 0 8px;font-size:22px;color:#f0c674}.card p{margin:0;color:#b8c0ca}.btn{display:inline-block;margin-top:16px;padding:8px 18px;background:#f0c674;color:#111418;border-radius:8px;text-decoration:none;font-weight:600}.note{color:#9aa3ad;font-size:15px;margin:-28px 0 40px}
+.card{background:#1a1f26;border:1px solid #2a313b;border-radius:12px;padding:24px;display:flex;flex-direction:column}.card p{flex:1}.card h2{margin:0 0 8px;font-size:22px;color:#f0c674}.card p{margin:0;color:#b8c0ca}.btn{display:inline-block;align-self:flex-start;margin-top:16px;padding:8px 18px;background:#f0c674;color:#111418;border-radius:8px;text-decoration:none;font-weight:600}.note{color:#9aa3ad;font-size:15px;margin:-28px 0 40px}
 section{background:#1a1f26;border:1px solid #2a313b;border-radius:12px;padding:24px}section h2{margin:0 0 8px;font-size:22px}
 a{color:#7fb7ff}#u{margin-top:12px;color:#f0c674}footer{max-width:960px;margin:0 auto;padding:24px;color:#6f7883;font-size:14px;border-top:1px solid #222831}
 </style></head><body><main>
@@ -12,7 +12,7 @@ a{color:#7fb7ff}#u{margin-top:12px;color:#f0c674}footer{max-width:960px;margin:0
 <div class="cards">
 <div class="card"><h2>알바 도우미</h2><p>에린 시간 기준 아르바이트 일정, 보고 가능 시간, 보상 시세로 계산한 예상 골드</p><a class="btn" href="alba/">바로 열기</a></div>
 <div class="card"><h2>물교 도우미</h2><p>이리아 교역소 물물교환 루트별 필요 재료, 구매 비용, 주간 진행도</p><a class="btn" href="barter/">바로 열기</a></div>
-<div class="card"><h2>던전 트래커</h2><p>크롬바스·심연·글렌베르나·브리레흐·탈라가흐 주간 입장 횟수, 통행증·편린 비용과 순이익</p><a class="btn" href="dungeon/">바로 열기</a></div>
+<div class="card"><h2>던전 도우미</h2><p>크롬바스·심연·글렌베르나·브리레흐·탈라가흐 주간 입장 횟수, 통행증·편린 비용과 순이익</p><a class="btn" href="dungeon/">바로 열기</a></div>
 </div>
 <p class="note">기록은 이 브라우저에만 저장됩니다. 파일 버전에서 쓰던 기록은 ⚙ 내보내기 → 가져오기로 옮길 수 있어요.</p>
 <section><h2>공유 시세</h2>

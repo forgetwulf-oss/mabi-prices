@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#141029">
-<title>마비노기 던전 통행증 트래커</title>
+<title>마비노기 던전 도우미</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
@@ -704,7 +704,7 @@ function importModal(){
       m.querySelector('#imGo').onclick=function(){
         var obj;
         try{ obj=JSON.parse(ta.value); }catch(e){ toast('JSON 형식이 올바르지 않아요'); return; }
-        if(!obj || !Array.isArray(obj.chars)){ toast('통행증 트래커 데이터가 아니에요'); return; }
+        if(!obj || !Array.isArray(obj.chars)){ toast('던전 도우미 데이터가 아니에요'); return; }
         if(!confirm('현재 데이터를 덮어쓰고 가져올까요? (캐릭터 '+obj.chars.length+'명)')) return;
         var before=snap(); state=normState(obj, state.settings);
         var reset=checkWeek(true);

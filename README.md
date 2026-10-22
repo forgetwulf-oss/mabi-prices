@@ -4,3 +4,5 @@
 URL: https://mabi-life.github.io/prices.json
 
 형식: `{updated, prices: {이름: {min, count, t}}}`
+
+앱: 알바 도우미 https://mabi-life.github.io/alba/ · 물교 도우미 https://mabi-life.github.io/barter/ · 던전 도우미 https://mabi-life.github.io/dungeon/
