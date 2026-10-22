@@ -95,7 +95,7 @@ function repH(j){const p=repOf(j);if(!p)return'';const now=erinMin(),a=toM(p.r),
 // 울라 대륙 마을 (나무위키 '마비노기/NPC' 지역 분류 2.x 울라: 티르코네일·두갈드 아일·던바튼·카브 항구·반호르·이멘마하·탈틴·타라). 이리아(켈라·필리아·발레스·칼리다)·벨바스트는 제외
 const ULA=new Set(['티르코네일','티르코','두갈드 아일','던바튼','카브','반호르','이멘마하','탈틴','타라']);const isUla=j=>ULA.has(j.village);
 function seqPlan(c,B,maxN=60){const now=erinAbs();let t=now;const used=new Set(),tl={},iv={},out=[];
- const ty=j=>j.type||j.id,cand=S.jobs.filter(j=>(S.seqAll||isUla(j))&&(!S.favOnly||j.fav)&&!j.avoid&&!c.done.includes(j.id)&&toM(j.start)!=null&&toM(j.end)!=null);
+ const ty=j=>j.type||j.id,favT=new Set(S.jobs.filter(j=>j.fav).map(ty)),cand=S.jobs.filter(j=>!(favT.has(ty(j))&&!j.fav)&&(S.seqAll||isUla(j))&&(!S.favOnly||j.fav)&&!j.avoid&&!c.done.includes(j.id)&&toM(j.start)!=null&&toM(j.end)!=null);
  for(let n=0;n<maxN;n++){const rep={};// 종류별 대표: 이번 칸에 가능한 같은 종류 중 골드 최고
   for(const j of cand){if(used.has(j.id))continue;const s=toM(j.start);let e=toM(j.end);if(e<=s)e+=1440;const p=repOf(j);let r=p?toM(p.r):s;if(r<s)r+=1440;
    const d0=Math.floor((t-s)/1440);for(let d=d0;d<=d0+2;d++){const ws=d*1440+s,we=d*1440+e;if(we<=t)continue;const acc=Math.max(t,ws),day=erinDay(acc),k=ty(j);
