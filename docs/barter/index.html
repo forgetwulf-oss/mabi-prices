@@ -4,6 +4,7 @@
 body{min-width:1360px;font-family:'NanumSquare Neo OTF','Gothic A1','Malgun Gothic',sans-serif;background:radial-gradient(circle at 50% 0%,#2b2357 0%,#141029 55%,#0b0918 100%) fixed;color:#ece8ff;font-size:14px;padding:18px 24px}
 button{background:rgba(255,255,255,.07);color:#ece8ff;border:1px solid rgba(255,255,255,.15);border-radius:8px;padding:5px 12px;cursor:pointer;font:inherit}
 button:hover{border-color:#f7d98b} button.on{background:#f7d98b;color:#141029;font-weight:800;border-color:#f7d98b}
+#chars .cx{display:none;font-style:normal;margin-left:5px;font-size:11px;opacity:.6} #chars .cx:hover{opacity:1;color:#ff8a8a} #chars button:hover .cx{display:inline}
 button.ghost{border:none;background:none;padding:2px 6px;color:#a9a2d6} button.sm{padding:1px 7px;font-size:12px}
 input,select,textarea{background:rgba(0,0,0,.35);color:#ece8ff;border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:4px 7px;font:inherit}
 input.n{width:72px;text-align:right}
@@ -56,7 +57,7 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',
 function weekKey(now=Date.now()){const k=new Date(now+9*3600e3);let d=k.getUTCDay(),h=k.getUTCHours();let back=(d-4+7)%7;if(back===0&&h<7)back=7;return new Date(Date.UTC(k.getUTCFullYear(),k.getUTCMonth(),k.getUTCDate()-back,7)-9*3600e3).toISOString()}
 function def(){const p={};const sp=SNAP&&SNAP.prices||{};for(const m of D.materials){if(sp[m]!=null)p[m]={p:sp[m],src:'snap'};else if(D.pricesFallback.prices[m]!=null)p[m]={p:D.pricesFallback.prices[m],src:'pril'}}
  const act={};for(const ps of D.posts){const c=D.goods.filter(g=>g.post===ps&&g.tier===6);if(c.length)act[ps]=c[0].id}
- return{v:2,chars:[{name:'캐릭터 1',done:{},owned:{}},{name:'캐릭터 2',done:{},owned:{}}],cur:0,route:'pk',carrier:0,cw:1200,cs:11,drate:0,qty:{},active6:act,prices:p,sale:{},week:weekKey(),snapT:SNAP&&SNAP.t||null}}
+ return{v:2,chars:[{name:'캐릭터 1',done:{},owned:{}}],cur:0,route:'pk',carrier:0,cw:1200,cs:11,drate:0,qty:{},active6:act,prices:p,sale:{},week:weekKey(),snapT:SNAP&&SNAP.t||null}}
 function migrate(o){const d=def();if(!o||!Array.isArray(o.chars))return d;o=Object.assign(d,o);for(const c of o.chars){c.done=c.done||{};c.owned=c.owned||{}}o.active6=Object.assign(d.active6,o.active6);o.v=2;if(o.cur>=o.chars.length)o.cur=0;return o}
 let S;try{S=JSON.parse(localStorage.getItem(LS))}catch(e){}S=migrate(S);
 if(SNAP&&SNAP.t&&S.snapT!==SNAP.t){for(const[m,v]of Object.entries(SNAP.prices))if(!S.prices[m]||S.prices[m].src!=='manual')S.prices[m]={p:v,src:'snap'};S.snapT=SNAP.t}
@@ -107,7 +108,7 @@ function routeCard(r,el){const goods=routeGoods(r),nd=need(goods),c=C();let buy=
  h+=`<div class="foot"><span>부족 구매비 <span class="neg">${gk(buy)}</span>${unk?'<span class="warn">+?</span>':''}</span><span>예상 수익 ${anySale?`<span class="${pf>=0?'pos':'neg'}">${pf>=0?'+':''}${gk(pf)}</span>`:'<span class="mut">판매가 미입력</span>'}</span><span class="sp"></span><button class="sm" data-a="runs" data-r="${r.id}">회차 보기</button></div>`;
  el.innerHTML=h}
 function render(){checkReset();const c=C();
- $('#chars').innerHTML=S.chars.map((x,i)=>`<button class="${i===S.cur?'on':''}" data-a="char" data-i="${i}">${esc(x.name)}</button>`).join('');
+ $('#chars').innerHTML=S.chars.map((x,i)=>`<button class="${i===S.cur?'on':''}" data-a="char" data-i="${i}" title="우클릭/더블클릭: 이름 변경">${esc(x.name)}${S.chars.length>1?`<i class="cx" data-a="delChar" data-i="${i}" title="삭제">✕</i>`:''}</button>`).join('');
  $('#reset').textContent='초기화 '+new Date(Date.parse(S.week)+7*864e5).toLocaleString('ko-KR',{timeZone:'Asia/Seoul',month:'numeric',day:'numeric',weekday:'short',hour:'2-digit',minute:'2-digit'})+' KST';
  routeCard(D.routes[0],$('#pk'));routeCard(D.routes[1],$('#ko'));
  // 스카하 접힘
@@ -129,7 +130,7 @@ function renderLayer(){const el=$('#layer');if(!layer){el.innerHTML='';return}le
   <label>두카트→골드 <span><input class="n" id="drate" value="${S.drate||''}"> G</span></label>
   <label>캐릭터 <span><button class="sm" data-a="renChar">이름변경</button> <button class="sm" data-a="delChar">삭제</button></span></label>
   <label>데이터 <span><button class="sm" id="expBtn">내보내기</button> <button class="sm" id="impBtn">가져오기</button></span></label>
-  <div class="mut" style="font-size:11px;margin-top:6px">데이터 ${esc(D.source.fetched)} (Prilus) · 시세 ${SNAP&&SNAP.t?new Date(SNAP.t).toLocaleString('ko-KR',{timeZone:'Asia/Seoul'})+' KST':'기본값'} · 자세한 화면: 물교도우미_상세.html</div></div>`}
+  <div class="mut" style="font-size:11px;margin-top:6px">데이터 ${esc(D.source.fetched)} (Prilus) · 시세 ${SNAP&&SNAP.t?new Date(SNAP.t).toLocaleString('ko-KR',{timeZone:'Asia/Seoul'})+' KST':'기본값'}</div></div>`}
  if(layer.t==='runs'){const r=D.routes.find(x=>x.id===layer.r),p=plan(r);h=`<div class="pop" style="top:90px;left:50%;transform:translateX(-50%);min-width:460px"><h2 style="margin-bottom:8px">${r.posts.join(' → ')} 적재</h2>`+
   (p.runs.map((ru,i)=>`<div style="margin:8px 0 4px;font-weight:800">${i+1}회차 <span class="mut" style="font-weight:400">${fmt(ru.w)}/${p.W} · 슬롯 ${ru.s}/${p.SL}</span></div><table class="lt">${ru.L.map(x=>`<tr><td><span class="t t${x.g.tier||0}">T${x.g.tier}</span></td><td class="mut">${x.g.post}</td><td>${x.g.name}</td><td class="r"><b>${x.q}</b></td></tr>`).join('')}</table>`).join('')||'<div class="pos">남은 교환 없음 🎉</div>')+
   (p.runs.length>2?'<div class="warn" style="margin-top:6px">⚠ 2회차에 다 안 들어갑니다</div>':'')+`<div style="text-align:right;margin-top:8px"><button data-a="close">닫기</button></div></div>`}
@@ -144,10 +145,10 @@ function setLayer(l){layer=l;renderLayer()}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b||/INPUT|SELECT|TEXTAREA/.test(b.tagName))return;const a=b.dataset.a,c=C(),st=e.ctrlKey?100:e.shiftKey?10:1;
  if(a==='close')setLayer(null);
  if(a==='settings')setLayer(layer&&layer.t==='settings'?null:{t:'settings'});
- if(a==='char')mut(()=>S.cur=+b.dataset.i);
- if(a==='addChar'){const n=prompt('캐릭터 이름');if(n)mut(()=>{S.chars.push({name:n,done:{},owned:{}});S.cur=S.chars.length-1})}
- if(a==='renChar'){const n=prompt('새 이름',c.name);if(n)mut(()=>c.name=n)}
- if(a==='delChar'){if(S.chars.length<2)return toast('최소 1명');if(confirm(c.name+' 삭제할까요?'))mut(()=>{S.chars.splice(S.cur,1);S.cur=0},'삭제됨 (되돌리기 가능)')}
+ if(a==='char'&&+b.dataset.i!==S.cur)mut(()=>S.cur=+b.dataset.i);
+ if(a==='addChar'){const n=(prompt('캐릭터 이름')||'').trim();if(n)mut(()=>{S.chars.push({name:n,done:{},owned:{}});S.cur=S.chars.length-1})}
+ if(a==='renChar')renChar(b.dataset.i!=null?+b.dataset.i:S.cur);
+ if(a==='delChar'){e.stopPropagation();delChar(b.dataset.i!=null?+b.dataset.i:S.cur);return}
  if(a==='row'){if(e.target.closest('button,i'))return;const id=+b.dataset.g;open=open===id?null:id;render()}
  if(a==='dot'){const g=G[b.dataset.g],i=+b.dataset.i;exchange(g,doneOf(g)===i+1?i:i+1)}
  if(a==='inc'||a==='dec'){const g=G[b.dataset.g];exchange(g,doneOf(g)+(a==='inc'?st:-st))}
@@ -177,6 +178,10 @@ document.addEventListener('change',e=>{const t=e.target,a=t.dataset.a,c=C(),v=t.
 });
 document.addEventListener('keydown',e=>{if(e.key==='Escape')setLayer(null);if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'&&!/INPUT|TEXTAREA/.test(document.activeElement.tagName)){e.preventDefault();undo()}});
 $('#undoBtn').onclick=undo;
+function renChar(i){const x=S.chars[i];if(!x)return;const n=(prompt('캐릭터 이름 변경',x.name)||'').trim();if(n&&n!==x.name)mut(()=>S.chars[i].name=n,'이름 변경됨')}
+function delChar(i){const x=S.chars[i];if(!x)return;if(S.chars.length<2)return toast('마지막 캐릭터는 삭제할 수 없습니다');if(confirm(`'${x.name}' 캐릭터를 삭제할까요? (Ctrl+Z로 되돌리기 가능)`))mut(()=>{S.chars.splice(i,1);if(S.cur>i||S.cur>=S.chars.length)S.cur=Math.max(0,S.cur-1)},`'${x.name}' 삭제됨 (Ctrl+Z로 되돌리기)`)}
+$('#chars').addEventListener('contextmenu',e=>{const b=e.target.closest('[data-a=char]');if(!b)return;e.preventDefault();renChar(+b.dataset.i)});
+$('#chars').addEventListener('dblclick',e=>{const b=e.target.closest('[data-a=char]');if(b&&!e.target.closest('.cx'))renChar(+b.dataset.i)});
 $('#impFile').onchange=async e=>{try{const o=JSON.parse(await e.target.files[0].text());if(!o.chars)throw 0;mut(()=>S=migrate(o),'가져오기 완료')}catch(x){toast('잘못된 파일')}e.target.value=''};
 async function fetchPrice(name,key){const r=await fetch('https://open.api.nexon.com/mabinogi/v1/auction/list?item_name='+encodeURIComponent(name),{headers:{'x-nxopen-api-key':key}});if(!r.ok)throw new Error(r.status);const j=await r.json();const it=(j.auction_item||[]).filter(x=>x.item_name===name);return it.length?Math.min(...it.map(x=>x.auction_price_per_unit)):null}
 const FEED='https://forgetwulf-oss.github.io/mabi-prices/prices.json';
