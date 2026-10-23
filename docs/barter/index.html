@@ -44,8 +44,9 @@ html{background:#0b0918}.xs{margin-bottom:10px;border-radius:14px;background:rgb
 .xb{padding:2px 14px 14px}.xb table.dt{border-collapse:collapse;width:100%}.xb .dt th,.xb .dt td{padding:4px 6px;border-bottom:1px solid rgba(255,255,255,.07);text-align:left;vertical-align:top}
 .xb .dt th{color:#a9a2d6;font-size:12px}.xb .dt td.r,.xb .dt th.r{text-align:right}.xb .dt tr.done td{opacity:.5}.xb .mats div{white-space:nowrap}.xb input.p{width:84px;text-align:right}
 .xb h4{margin:8px 0 4px;color:#fff3cf}.xb .tot{font-weight:800}.short{color:#ff6b6b;font-weight:700}.xgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-#homeLink:hover{color:#f7d98b!important;text-decoration:underline!important}</style></head><body>
-<div class="top"><a id="homeLink" href="https://mabi-life.github.io/" title="생활도우미 메인으로" style="color:#a9a2d6;font-size:12.5px;text-decoration:none;margin-right:4px;white-space:nowrap">← 생활도우미</a><h1>⚖️ 물물교환</h1><span id="chars" style="display:flex;gap:6px"></span><button class="ghost" data-a="addChar" title="캐릭터 추가">＋</button>
+.siteNav{display:flex;align-items:center;gap:2px;margin:0 0 10px;font-size:12.5px}.siteNav a,.siteNav span{color:#a9a2d6;text-decoration:none;padding:3px 10px;border-radius:999px;white-space:nowrap;line-height:1.3}.siteNav a:hover{color:#f7d98b;background:rgba(255,255,255,.06)}.siteNav .on{color:#f7d98b;background:rgba(247,217,139,.14);font-weight:700}</style></head><body>
+<nav class="siteNav" aria-label="도우미 이동"><a id="homeLink" href="../" title="생활도우미 메인으로">홈</a><a href="../alba/">알바</a><span class="on" aria-current="page">물교</span><a href="../dungeon/">던전</a></nav>
+<div class="top"><h1>⚖️ 물물교환</h1><span id="chars" style="display:flex;gap:6px"></span><button class="ghost" data-a="addChar" title="캐릭터 추가">＋</button>
 <span style="flex:1"></span><span class="mut" id="reset"></span><button id="undoBtn" class="ghost" title="되돌리기 (Ctrl+Z)">↶</button><button class="ghost" data-a="settings" title="설정" style="font-size:18px">⚙</button></div>
 <div class="layout"><div id="pk" class="card"></div><div id="ko" class="card"></div>
 <div style="grid-column:3;grid-row:1/span 2"><div class="card side" id="buy"></div><div class="card sk" id="sk" style="margin-top:16px"></div></div><div id="xtra" style="grid-column:1/span 2;grid-row:2;min-width:0"></div></div>
