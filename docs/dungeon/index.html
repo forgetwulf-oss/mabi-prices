@@ -190,6 +190,12 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
 .wl .whb{flex:none;font-size:12px;font-weight:700;color:#d9d2ff;padding:5px 9px;border-radius:999px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12)}
 .wl .whb:hover{background:rgba(247,217,139,.15);color:#fff}
 .wl .whb b{color:#f7d98b;margin-left:2px}
+.wl.editing{flex-wrap:wrap;align-items:center;row-gap:8px}
+.wl.editing .wi{flex:1 1 100%;min-width:140px;order:3}
+.wl.editing .hint{flex:1 1 100%;order:4;font-size:12px}
+.wl.editing input{flex:1;width:100%;min-width:120px;font-size:18px;padding:8px 12px}
+.wl.editing .wu{font-size:18px}
+.wl.editing .wlab,.wl.editing .whb{order:0}
 .cbar{display:flex;justify-content:flex-end;margin:-8px 0 6px}
 .cbar .fa{font-size:12px;font-weight:700;color:#9f98c9;padding:3px 8px;border-radius:999px}
 .cbar .fa:hover{color:#fff;background:rgba(255,255,255,.07)}
@@ -592,7 +598,7 @@ function rowHtml(c, ci, d){
 var wealthEditing = null;   // 편집 중인 캐릭터 id
 function fmtWealth(g){ return g>=MAN ? fmtGold(g) : g.toLocaleString('ko-KR'); }
 function wealthHtml(c, ci){
-  var h='<div class="wl"><span class="wlab">💰 전재산</span>';
+  var h='<div class="wl'+(wealthEditing===c.id?' editing':'')+'"><span class="wlab">💰 전재산</span>';
   if (wealthEditing === c.id){
     h+='<span class="wi"><input type="text" inputmode="decimal" autocomplete="off" data-wealth="'+ci+'" value="'+(c.wealth==null?'':Math.round(c.wealth/MAN))+'" placeholder="예: 5230" aria-label="전재산 (만 골드 단위)"><span class="wu">만</span></span><span class="hint">Enter 저장 · Esc 취소</span>';
   } else if (c.wealth==null){
@@ -630,7 +636,15 @@ document.addEventListener('keydown', function(e){
 });
 document.addEventListener('focusout', function(e){
   var inp=e.target; if(!inp.getAttribute || inp.getAttribute('data-wealth')===null) return;
-  if (wealthEditing!==null && !commitWealth(inp)) cancelWealth();
+  var wl=inp.closest('.wl');
+  var editingId=wealthEditing;
+  setTimeout(function(){
+    if (wealthEditing!==editingId) return;
+    var ae=document.activeElement;
+    if (ae && ae.getAttribute && ae.getAttribute('data-wealth')!==null) return;
+    if (wl && ae && wl.contains(ae)) return;
+    if (wealthEditing!==null && !commitWealth(inp)) cancelWealth();
+  }, 0);
 });
 function cardHtml(c, ci){
   var t=charTotals(c);
