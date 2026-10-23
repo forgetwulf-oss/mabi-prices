@@ -75,11 +75,23 @@ const D=JSON.parse(document.getElementById('data').textContent),SNAP=JSON.parse(
 const LS='mabiBarter.v1',KEYLS='mabiBarter.apikey',$=s=>document.querySelector(s),G=Object.fromEntries(D.goods.map(g=>[g.id,g]));
 const CARRIERS=[{n:'그랜마 상인+알파카 마차',w:1200,s:11},{n:'직접 입력',w:null,s:null}];
 const fmt=n=>n==null||isNaN(n)?'-':Math.round(n).toLocaleString('ko-KR');
-/* HOT: prices.json `count` = auction listing stock at scrape (not true daily volume).
-   Threshold 5000 ≈ top ~20% of tracked items (2026-10 feed: median ~1k, p80 ~4.8k). */
-const HOT_MIN=5000;
-const hotIcon=c=>c!=null&&c>=HOT_MIN?`<span class="hot" title="매물 많음 · 경매 매물 ${fmt(c)}개">🔥</span>`:'';
-const hotMat=m=>hotIcon(S.prices[m]&&S.prices[m].count);
+/* HOT: 체결물량 기준 (listing count 아님). prices.json volume24(없으면 volume).
+   history API는 ~1h만 제공 → 피드가 auction_buy_id로 24h 근사 누적. hotMinVolume=피드 p80.
+   history 실패 시 volume 없음 → 🔥만 끄고 최저가(min)는 유지. */
+let HOT_MIN=300; // feed hotMinVolume 없을 때 fallback (재료 ~1h p80 근방)
+let feedHotMin=null;
+const hotMetric=e=>{
+  if(!e)return null;
+  if(e.volume24!=null)return{v:e.volume24,label:'24시간'};
+  if(e.volume!=null)return{v:e.volume,label:'최근'};
+  return null;
+};
+const hotIcon=src=>{
+  const m=(src&&typeof src==='object')?hotMetric(src):(src!=null&&src!==''?{v:+src,label:'최근'}:null);
+  if(!m||!(m.v>=(feedHotMin??HOT_MIN)))return '';
+  return `<span class="hot" title="거래 활발 · ${m.label} 체결 ${fmt(m.v)}개">🔥</span>`;
+};
+const hotMat=m=>hotIcon(S.prices[m]);
 const gk=n=>{if(n==null||isNaN(n))return '-';const a=Math.abs(n),s=n<0?'-':'';if(a>=1e8)return s+(a/1e8).toFixed(2).replace(/\.?0+$/,'')+'억';if(a>=1e4)return s+Math.round(a/1e4).toLocaleString('ko-KR')+'만';return s+Math.round(a).toLocaleString('ko-KR')};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function weekKey(now=Date.now()){const k=new Date(now+9*3600e3);let d=k.getUTCDay(),h=k.getUTCHours();let back=(d-4+7)%7;if(back===0&&h<7)back=7;return new Date(Date.UTC(k.getUTCFullYear(),k.getUTCMonth(),k.getUTCDate()-back,7)-9*3600e3).toISOString()}
@@ -283,12 +295,12 @@ const FEED='https://mabi-life.github.io/prices.json';
 async function loadFeed(){const r=await fetch(FEED+'?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error(r.status);const j=await r.json();if(!j.prices)throw new Error('bad');return j}
 const feedTime=u=>{const d=new Date(u);return isNaN(d)?'?':d.toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit',hour12:false})};
 async function loadPrices(){const ms0=Object.keys(need([...routeGoods(D.routes[0]),...routeGoods(D.routes[1])],false));
- try{const j=await loadFeed();const res={};for(const m of ms0){const e=j.prices[m];if(e&&e.min!=null)res[m]={p:e.min,count:e.count}}if(!Object.keys(res).length)throw new Error('empty');const t=Date.parse(j.updated)||Date.now();
-  return mut(()=>{for(const[m,v]of Object.entries(res))S.prices[m]={p:v.p,src:'feed',t,count:v.count}},`공유 시세 ${Object.keys(res).length}종 (${feedTime(j.updated)} 기준)`)}catch(x){if(!localStorage.getItem(KEYLS))return toast('공유 시세를 불러오지 못했습니다 (⚙ API 키로 직접 조회 가능)')}
+ try{const j=await loadFeed();const res={};for(const m of ms0){const e=j.prices[m];if(e&&e.min!=null)res[m]={p:e.min,count:e.count,volume:e.volume,volume24:e.volume24,trades:e.trades,trades24:e.trades24}}if(!Object.keys(res).length)throw new Error('empty');const t=Date.parse(j.updated)||Date.now();if(j.hotMinVolume!=null)feedHotMin=j.hotMinVolume;
+  return mut(()=>{for(const[m,v]of Object.entries(res))S.prices[m]={p:v.p,src:'feed',t,count:v.count,volume:v.volume,volume24:v.volume24,trades:v.trades,trades24:v.trades24}},`공유 시세 ${Object.keys(res).length}종 (${feedTime(j.updated)} 기준)`)}catch(x){if(!localStorage.getItem(KEYLS))return toast('공유 시세를 불러오지 못했습니다 (⚙ API 키로 직접 조회 가능)')}
  return loadPricesApi()}
 async function loadPricesApi(){const key=localStorage.getItem(KEYLS);if(!key)return toast('API 키를 먼저 입력하세요');const ms=Object.keys(need([...routeGoods(D.routes[0]),...routeGoods(D.routes[1])],false));
  const btn=$('#priceBtn');const res={};let fail=0;for(let i=0;i<ms.length;i++){if(btn)btn.textContent=`API ${i+1}/${ms.length}`;try{const p=await fetchPrice(ms[i],key);if(p!=null)res[ms[i]]=p;else fail++}catch(x){fail++;if(x.message==='429')await new Promise(r=>setTimeout(r,1500))}await new Promise(r=>setTimeout(r,250))}
  mut(()=>{for(const[m,p]of Object.entries(res))S.prices[m]={p,src:'api',t:Date.now()}},`시세 ${Object.keys(res).length}종 갱신${fail?` · 실패 ${fail}`:''}`)}
-window.__barter={get S(){return S},plan,weekKey,render,exchange,parsePaste,migrate,setOpen:id=>{open=id;render()},setLayer,route,get UI(){return UI},openRoutes:()=>{UI.routes=true;try{localStorage.setItem(UIK,JSON.stringify(UI))}catch(x){}render()},HOT_MIN,hotIcon,hotMat};
+window.__barter={get S(){return S},plan,weekKey,render,exchange,parsePaste,migrate,setOpen:id=>{open=id;render()},setLayer,route,get UI(){return UI},openRoutes:()=>{UI.routes=true;try{localStorage.setItem(UIK,JSON.stringify(UI))}catch(x){}render()},HOT_MIN,get feedHotMin(){return feedHotMin},hotIcon,hotMat,hotMetric};
 render();
 </script></body></html>

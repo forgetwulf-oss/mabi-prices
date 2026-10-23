@@ -98,7 +98,7 @@ function focus(c,ids){const now=erinMin(),open=S.jobs.filter(j=>ids.has(j.id)&&!
 function detail(j,B){const b=best(j,B),mx=mixOf(j,B);
  const rows=j.rewards.map(r=>{const g=rgold(r,B),u=unit(r);
   if(edit)return `<tr data-rid="${r.id}"><td><input data-rf="item" value="${r.item}" style="width:170px"></td><td><input data-rf="price" type="number" value="${r.price??''}" placeholder="수동" style="width:90px"></td><td><input data-rf="qty" type="number" value="${r.qty??''}" style="width:60px">개</td><td><input data-rf="pts" type="number" value="${r.pts??''}" style="width:60px">P</td><td><button class="tg red" data-delr="${r.id}">✕</button></td></tr>`;
-  return `<tr class="${b&&b.r===r?'bestr':''}"><td>${r.item}${hotIcon(r.apiCount)}${verifyBadge(r)}${r.en&&r.en!==r.item?` <span class="mu" style="font-size:11px">${r.en}</span>`:''}${r.flags&&r.flags.filter(f=>f!=='검증필요').length?` <span class="tag" title="${r.flags.filter(f=>f!=='검증필요').join(', ')}">!</span>`:''}</td><td class="n">${u!=null?fmt(u)+'G':'<span class="mu">가격 미상</span>'}${u!=null?` <span class="mu" style="font-size:11px">${(!r.useApi&&r.price!=null)?'시트':'경매'}</span>`:''}</td><td class="n">×${r.qty??'?'}</td><td class="n mu">${r.pts??'?'}P × ${count(r,B)}회</td><td class="n gold">${g!=null?'+'+fmt(g):'—'}</td></tr>`}).join('');
+  return `<tr class="${b&&b.r===r?'bestr':''}"><td>${r.item}${hotIcon(r)}${verifyBadge(r)}${r.en&&r.en!==r.item?` <span class="mu" style="font-size:11px">${r.en}</span>`:''}${r.flags&&r.flags.filter(f=>f!=='검증필요').length?` <span class="tag" title="${r.flags.filter(f=>f!=='검증필요').join(', ')}">!</span>`:''}</td><td class="n">${u!=null?fmt(u)+'G':'<span class="mu">가격 미상</span>'}${u!=null?` <span class="mu" style="font-size:11px">${(!r.useApi&&r.price!=null)?'시트':'경매'}</span>`:''}</td><td class="n">×${r.qty??'?'}</td><td class="n mu">${r.pts??'?'}P × ${count(r,B)}회</td><td class="n gold">${g!=null?'+'+fmt(g):'—'}</td></tr>`}).join('');
  return `<tr class="det"><td></td><td colspan="5"><div class="mu" style="font-size:12px;margin-bottom:4px">${j.type||''} · 모집 ${j.start||'?'}–${j.end||'?'}${j.report?' · 보고 '+j.report+'부터':''}${j.note?' · '+j.note:''}</div><table class="rt">${rows}</table>${edit?`<button class="tg" data-addr="${j.id}">＋ 보상</button> <button class="tg red" data-del="${j.id}">NPC 삭제</button> <button class="tg" data-avoid="${j.id}" title="지양: top10 제외·항상 접힘">${j.avoid?'지양 해제':'지양'}</button>`:(mx.pick.length>1?`<div style="margin-top:4px">혼합: ${mx.pick.map(([x,n])=>x.item+'×'+n).join(' + ')} = <span class="gold">${fmt(mx.gold)}G</span> <span class="mu">(남음 ${mx.left}P)</span></div>`:'')}</td></tr>`}
 const RNOTE={"Malcolm": "초급 방직·재봉 알바: 보고 12:00부터\n고급 재봉 알바: 보고 17:00부터", "Simon": "중급·고급 재봉 알바: 보고 17:00부터", "Lepus": "중급·고급 재봉 알바: 보고 17:00부터", "Brenda": "고급 재봉 알바: 보고 17:00부터", "Pierrick": "초급 방직 알바: 보고 12:00부터", "Shena": "평일 3채널에서만 가능"};
 function repOf(j){let r=j.report,e=j.end;if(!r&&j.npcEn){const d=DATA.find(x=>x.npcEn===j.npcEn);if(d){r=d.report;e=e||d.end}}return r?{r,e:e||"",n:RNOTE[j.npcEn]||""}:null}
@@ -128,12 +128,12 @@ function render(){const B=budget(),c=ch(),ids=expandedSet(B),f=focus(c,ids);
  const plan=seqPlan(c,B),star=j=>`<button class="star${j.fav?' on':''}" data-fav="${j.id}" title="${j.fav?'즐겨찾기 해제':'즐겨찾기'} (같은 종류·시간대에서 우선)">${j.fav?'★':'☆'}</button>`;
  const hideB=j=>`<button class="hide" data-avoid="${j.id}" title="안 할 알바로 접기 (맨 아래 '안 함'으로 · 우클릭도 가능)">−</button>`;
  let html='',grp=[];
- const thin=j=>{const b=best(j,B),dn=c.done.includes(j.id);return `<tr class="job thin${dn?' done':''}" data-open="${j.id}"><td class="tm">${star(j)}${j.start?j.start+'–'+(j.end||''):'—'}${repH(j)}</td><td>${j.village}${!isUla(j)?' <span class="tag">울라 밖</span>':''}</td><td>${npcH(j)}${avT(j)}</td><td>${b?b.r.item+hotIcon(b.r.apiCount):''}${b?'':'<span class="tag">가격 미상</span>'}</td><td class="n gold">${b?'+'+fmt(b.g):''}</td><td class="ac">${j.avoid?`<button class="tg unhide" data-avoid="${j.id}" title="다시 보기 (순서에 다시 포함)">다시 보기</button>`:`<button class="chk${dn?' on':''}" data-done="${j.id}">${dn?'✓':''}</button>${dn?'':hideB(j)}`}</td></tr>`+(openId===j.id?detail(j,B):'')};
+ const thin=j=>{const b=best(j,B),dn=c.done.includes(j.id);return `<tr class="job thin${dn?' done':''}" data-open="${j.id}"><td class="tm">${star(j)}${j.start?j.start+'–'+(j.end||''):'—'}${repH(j)}</td><td>${j.village}${!isUla(j)?' <span class="tag">울라 밖</span>':''}</td><td>${npcH(j)}${avT(j)}</td><td>${b?b.r.item+hotIcon(b.r):''}${b?'':'<span class="tag">가격 미상</span>'}</td><td class="n gold">${b?'+'+fmt(b.g):''}</td><td class="ac">${j.avoid?`<button class="tg unhide" data-avoid="${j.id}" title="다시 보기 (순서에 다시 포함)">다시 보기</button>`:`<button class="chk${dn?' on':''}" data-done="${j.id}">${dn?'✓':''}</button>${dn?'':hideB(j)}`}</td></tr>`+(openId===j.id?detail(j,B):'')};
  const fold=(k,lab,L)=>{if(!L.length)return;if(S.showAll||edit||openGrp[k])html+=L.map(thin).join('');else html+=`<tr class="grp" data-grp="${k}"><td colspan="6">▸ ${lab} ${L.length}개 <span style="opacity:.7">· ${L.slice(0,8).map(j=>j.npc).join(', ')}${L.length>8?' …':''}</span></td></tr>`};
  plan.forEach((x,i)=>{const j=x.j,b=best(j,B),isF=i===0;
   if(x.gap>0)html+=`<tr class="gapr"><td colspan="6">⏳ 빈 시간 에린 ${hm(((x.acc-x.gap)%1440+1440)%1440)}–${hm(x.acc%1440)} (현실 ${Math.round(x.gap*1.5/60)}분)</td></tr>`;
   const left=x.end-x.now,urg=left>0&&left<=60,rm=Math.round((x.rep-x.now)*1.5/60),lab=isF?(x.acc===x.now?'지금':'다음 '+Math.ceil((x.acc-x.now)*1.5/60)+'분 후'):'';
-  html+=`<tr class="job${isF?' now':''}${j.fav?' fav':''}${urg?' urg':''}" data-open="${j.id}"><td class="tm">${star(j)}<span class="ord">${i+1}</span>${j.start?j.start+'–'+(j.end||''):'<span class="mu">—</span>'}${repH(j)}${isF?`<span class="badge">${lab}</span>`:''}<div class="sq">${x.acc===x.now?'지금':hm(x.acc%1440)} 접수 → <b>${hm(x.rep%1440)}</b> 보고${rm>0?' · 현실 '+rm+'분 후':''}${urg?`<span class="dl" title="보고 마감까지 에린 1시간 이내">⏰ 마감 ${hm(x.end%1440)} (에린 ${left}분 남음)</span>`:''}</div></td><td>${j.village}${!isUla(j)?' <span class="tag">울라 밖</span>':''}</td><td>${npcH(j)}${avT(j)}</td><td>${b?b.r.item+hotIcon(b.r.apiCount)+` <span class="mu">×${b.r.qty*count(b.r,B)}</span>`:'<span class="tag">가격 미상</span>'}</td><td class="n gold">${b?'+'+fmt(b.g):''}</td><td class="ac"><button class="chk" data-done="${j.id}" title="오늘 완료"></button>${hideB(j)}</td></tr>`+(openId===j.id?detail(j,B):'')});
+  html+=`<tr class="job${isF?' now':''}${j.fav?' fav':''}${urg?' urg':''}" data-open="${j.id}"><td class="tm">${star(j)}<span class="ord">${i+1}</span>${j.start?j.start+'–'+(j.end||''):'<span class="mu">—</span>'}${repH(j)}${isF?`<span class="badge">${lab}</span>`:''}<div class="sq">${x.acc===x.now?'지금':hm(x.acc%1440)} 접수 → <b>${hm(x.rep%1440)}</b> 보고${rm>0?' · 현실 '+rm+'분 후':''}${urg?`<span class="dl" title="보고 마감까지 에린 1시간 이내">⏰ 마감 ${hm(x.end%1440)} (에린 ${left}분 남음)</span>`:''}</div></td><td>${j.village}${!isUla(j)?' <span class="tag">울라 밖</span>':''}</td><td>${npcH(j)}${avT(j)}</td><td>${b?b.r.item+hotIcon(b.r)+` <span class="mu">×${b.r.qty*count(b.r,B)}</span>`:'<span class="tag">가격 미상</span>'}</td><td class="n gold">${b?'+'+fmt(b.g):''}</td><td class="ac"><button class="chk" data-done="${j.id}" title="오늘 완료"></button>${hideB(j)}</td></tr>`+(openId===j.id?detail(j,B):'')});
  const pid=new Set(plan.map(x=>x.j.id)),hid=S.jobs.filter(j=>j.avoid&&!c.done.includes(j.id)),rest=S.jobs.filter(j=>!pid.has(j.id)&&!c.done.includes(j.id)&&!j.avoid);
  fold('rest','접힌',rest.filter(j=>S.seqAll||isUla(j)));fold('out','울라 밖',rest.filter(j=>!S.seqAll&&!isUla(j)));
  const dn=S.jobs.filter(j=>c.done.includes(j.id));if(dn.length)html+=`<tr class="dnh"><td colspan="6">✓ 오늘 완료 ${dn.length}개</td></tr>`+dn.map(thin).join('');
@@ -158,18 +158,32 @@ function renderPrice(){const list=[];S.jobs.forEach(j=>j.rewards.forEach(r=>{if(
  const q=$('#pq');if(q&&document.activeElement!==q&&pq){q.focus();q.setSelectionRange(pq.length,pq.length)}}
 const apiKey=()=>localStorage.getItem(KEY+'.key')||localStorage.getItem(V1KEY+'.key')||'';
 const FEED='https://mabi-life.github.io/prices.json';
-/* HOT: prices.json `count` = auction listing stock at scrape (not true daily volume).
-   Threshold 5000 ≈ top ~20% of tracked items (2026-10 feed: median ~1k, p80 ~4.8k). */
-const HOT_MIN=5000;
-const hotIcon=c=>c!=null&&c>=HOT_MIN?`<span class="hot" title="매물 많음 · 경매 매물 ${fmt(c)}개">🔥</span>`:'';const verifyBadge=r=>r&&r.needsVerify?`<span class="tag verneed" title="경매 아이템명 검증 필요">검증필요</span>`:'';
+/* HOT: 체결물량 기준 (listing count 아님). prices.json volume24(없으면 volume).
+   history API는 ~1h만 제공 → 피드가 auction_buy_id로 24h 근사 누적. hotMinVolume=피드 p80.
+   history 실패 시 volume 없음 → 🔥만 끄고 최저가(min)는 유지. */
+let HOT_MIN=300; // feed hotMinVolume 없을 때 fallback (재료 ~1h p80 근방)
+let feedHotMin=null;
+const hotMetric=e=>{
+  if(!e)return null;
+  if(e.apiVol24!=null)return{v:e.apiVol24,label:'24시간'};
+  if(e.volume24!=null)return{v:e.volume24,label:'24시간'};
+  if(e.apiVolume!=null)return{v:e.apiVolume,label:'최근'};
+  if(e.volume!=null)return{v:e.volume,label:'최근'};
+  return null;
+};
+const hotIcon=src=>{
+  const m=(src&&typeof src==='object')?hotMetric(src):(src!=null&&src!==''?{v:+src,label:'최근'}:null);
+  if(!m||!(m.v>=(feedHotMin??HOT_MIN)))return '';
+  return `<span class="hot" title="거래 활발 · ${m.label} 체결 ${fmt(m.v)}개">🔥</span>`;
+};const verifyBadge=r=>r&&r.needsVerify?`<span class="tag verneed" title="경매 아이템명 검증 필요">검증필요</span>`:'';
 function feedTs(u){const d=new Date(u);return isNaN(d)?'?':d.toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit',hour12:false})}
 // apiPrice만 갱신. useApi=false(시트)는 unit()이 sheet price를 쓰므로 덮어쓰지 않음.
-function applyFeedPrices(P,updated,{quiet=false}={}){const ts=feedTs(updated);SNAP.ts='공유 '+ts;let k=0;
- const go=()=>S.jobs.forEach(j=>j.rewards.forEach(r=>{const e=r.api&&P[r.api];if(e&&e.min!=null){r.apiPrice=e.min;if(e.count!=null)r.apiCount=e.count;k++}}));
+function applyFeedPrices(P,updated,{quiet=false,hotMin=null}={}){const ts=feedTs(updated);SNAP.ts='공유 '+ts;if(hotMin!=null)feedHotMin=hotMin;let k=0;
+ const go=()=>S.jobs.forEach(j=>j.rewards.forEach(r=>{const e=r.api&&P[r.api];if(e&&e.min!=null){r.apiPrice=e.min;if(e.count!=null)r.apiCount=e.count;r.apiVolume=(e.volume24!=null||e.volume!=null)?(e.volume24??e.volume):null;r.apiVol24=e.volume24??null;k++}}));
  if(quiet){go();save();render();return k}
  change(go,`공유 시세 갱신 (${ts} 기준)`);return k}
 async function fetchPrices({quiet=false}={}){try{const r=await fetch(FEED+'?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error(r.status);const j=await r.json();const P=j.prices||{};if(!Object.keys(P).length)throw new Error('empty');
-  return applyFeedPrices(P,j.updated,{quiet})}catch(e){if(quiet){toast('공유 시세 갱신 실패 · 저장된 시세 사용');return 0}
+  return applyFeedPrices(P,j.updated,{quiet,hotMin:j.hotMinVolume??null})}catch(e){if(quiet){toast('공유 시세 갱신 실패 · 저장된 시세 사용');return 0}
   if(!apiKey())return toast('공유 시세를 불러오지 못함 (⚙ API 키로 직접 조회 가능)')}
  return fetchPricesApi()}
 async function fetchPricesApi(){const key=apiKey();if(!key)return toast('⚙에서 API 키를 먼저 입력');const names=[...new Set(S.jobs.flatMap(j=>j.rewards.map(r=>r.api)).filter(Boolean))];const res={};let n=0;
@@ -218,6 +232,6 @@ document.addEventListener('change',e=>{const t=e.target,d=t.dataset,num=v=>v==='
  const jr=t.closest('[data-jid]'),j=jr&&S.jobs.find(x=>x.id===jr.dataset.jid);if(j&&d.jf)return change(()=>j[d.jf]=t.value.trim())});
 document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'&&!e.target.matches('input')){e.preventDefault();doUndo()}if(e.key==='Escape')['#pSet','#pPrice','#pCombo'].forEach(p=>$(p).classList.add('hid'))});
 setInterval(()=>{if(document.querySelector('.pop:not(.hid)')||edit){$('#clock').textContent='에린 '+hm(erinMin());return}render()},1500);
-let feedReady=null;/*persist catalog migrate*/save();window.__alba={get S(){return S},get feedReady(){return feedReady},isUla,erinAbs,erinDay,gameDay,seqPlan,shopOf,NAMEFIX,budget,erinMin,best,expandedSet,focus,ch,knap,mixOf,importV1,fetchPrices,HOT_MIN,verifyBadge,hotIcon};render();
+let feedReady=null;/*persist catalog migrate*/save();window.__alba={get S(){return S},get feedReady(){return feedReady},isUla,erinAbs,erinDay,gameDay,seqPlan,shopOf,NAMEFIX,budget,erinMin,best,expandedSet,focus,ch,knap,mixOf,importV1,fetchPrices,HOT_MIN,get feedHotMin(){return feedHotMin},verifyBadge,hotIcon,hotMetric};render();
 feedReady=fetchPrices({quiet:true});// 첫 화면은 SNAP/localStorage, 이어서 공유 시세
 </script></body></html>
