@@ -10,7 +10,7 @@ input,select,textarea{background:rgba(0,0,0,.35);color:#ece8ff;border:1px solid 
 input.n{width:72px;text-align:right}
 .top{display:flex;align-items:center;gap:10px;margin-bottom:16px}
 h1{font-size:20px;font-weight:800;color:#f7d98b;margin-right:12px}
-.mut{color:#8f88bb}.neg{color:#ff6b6b}.pos{color:#5fe08a}.warn{color:#ffc857}
+.mut{color:#8f88bb}.neg{color:#ff6b6b}.pos{color:#5fe08a}.warn{color:#ffc857}.hot{display:inline;margin-left:2px;font-size:11px;cursor:help;filter:drop-shadow(0 0 2px rgba(255,120,40,.55))}
 .layout{display:grid;grid-template-columns:1fr 1fr 360px;gap:16px;align-items:start}
 .card{border-radius:16px;padding:16px 18px;background:rgba(255,255,255,.045);border:1px solid rgba(247,217,139,.22)}
 .card h2{font-size:17px;font-weight:800;margin-bottom:10px;color:#fff3cf}
@@ -75,6 +75,11 @@ const D=JSON.parse(document.getElementById('data').textContent),SNAP=JSON.parse(
 const LS='mabiBarter.v1',KEYLS='mabiBarter.apikey',$=s=>document.querySelector(s),G=Object.fromEntries(D.goods.map(g=>[g.id,g]));
 const CARRIERS=[{n:'그랜마 상인+알파카 마차',w:1200,s:11},{n:'직접 입력',w:null,s:null}];
 const fmt=n=>n==null||isNaN(n)?'-':Math.round(n).toLocaleString('ko-KR');
+/* HOT: prices.json `count` = auction listing stock at scrape (not true daily volume).
+   Threshold 5000 ≈ top ~20% of tracked items (2026-10 feed: median ~1k, p80 ~4.8k). */
+const HOT_MIN=5000;
+const hotIcon=c=>c!=null&&c>=HOT_MIN?`<span class="hot" title="매물 많음 · 경매 매물 ${fmt(c)}개">🔥</span>`:'';
+const hotMat=m=>hotIcon(S.prices[m]&&S.prices[m].count);
 const gk=n=>{if(n==null||isNaN(n))return '-';const a=Math.abs(n),s=n<0?'-':'';if(a>=1e8)return s+(a/1e8).toFixed(2).replace(/\.?0+$/,'')+'억';if(a>=1e4)return s+Math.round(a/1e4).toLocaleString('ko-KR')+'만';return s+Math.round(a).toLocaleString('ko-KR')};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function weekKey(now=Date.now()){const k=new Date(now+9*3600e3);let d=k.getUTCDay(),h=k.getUTCHours();let back=(d-4+7)%7;if(back===0&&h<7)back=7;return new Date(Date.UTC(k.getUTCFullYear(),k.getUTCMonth(),k.getUTCDate()-back,7)-9*3600e3).toISOString()}
@@ -117,7 +122,7 @@ function rowHtml(g){const q=qtyOf(g),dn=doneOf(g),sh=remOf(g)?shortOf(g):0,six=g
  <span style="display:flex;align-items:center;gap:8px">${dots}<span class="cnt">${dn}/${q}</span></span>
  <span class="st">${!remOf(g)?'<span class="pos">완료</span>':sh?`<span class="neg">❗ 부족 ${sh}종</span>`:'<span class="pos">✅ 준비</span>'}</span></div>`;
  if(open===g.id){const c=C(),rm=remOf(g),uc=unitCost(g),s=S.sale[g.id]||{};
-  h+=`<div class="det"><table>${g.mats.map(([m,k])=>{const o=c.owned[m]||0,n=k*rm;return`<tr><td>${m} <span class="mut">×${k}</span></td><td class="r ${o<n?'neg':'pos'}">${fmt(o)} / ${fmt(n)}</td><td class="r"><input class="n" data-a="price" data-m="${m}" value="${price(m)??''}" placeholder="가격?"> G</td></tr>`}).join('')}</table>
+  h+=`<div class="det"><table>${g.mats.map(([m,k])=>{const o=c.owned[m]||0,n=k*rm;return`<tr><td>${m}${hotMat(m)} <span class="mut">×${k}</span></td><td class="r ${o<n?'neg':'pos'}">${fmt(o)} / ${fmt(n)}</td><td class="r"><input class="n" data-a="price" data-m="${m}" value="${price(m)??''}" placeholder="가격?"> G</td></tr>`}).join('')}</table>
   <div style="display:flex;gap:14px;align-items:center;margin-top:8px;flex-wrap:wrap"><span>재료비/개 <b class="neg">${gk(uc.s)}</b>${uc.u?'<span class="warn">+?</span>':''}</span>
   <span>판매가/개 <input class="n" data-a="sale" data-k="d" data-g="${g.id}" value="${s.d||''}" placeholder="두카트"> <input class="n" data-a="sale" data-k="g" data-g="${g.id}" value="${s.g||''}" placeholder="골드"></span>
   <span>수량 <input class="n" style="width:50px" data-a="qty" data-g="${g.id}" value="${q}"></span>
@@ -140,7 +145,7 @@ function xGoods(){const c=C(),r=route();let h=`<div style="display:flex;gap:12px
   h+=`<table class="dt"><tr><th>티어</th><th>교역품</th><th class="r">제한</th><th class="r">수량</th><th class="r">무게/슬롯당</th><th>재료 (개당 → 필요)</th><th class="r">재료비</th><th class="r">판매가/개 (두카트 · 골드)</th><th class="r">손익</th><th>${esc(c.name)} 교환</th></tr>`;let P={cost:0,rev:0,unk:0};
   for(const g of activeGoods(ps)){const q=qtyOf(g),dn=doneOf(g),uc=unitCost(g),cost=uc.s*q,rv=rev(g,q),pf=rv-cost;P.cost+=cost;P.rev+=rv;P.unk+=uc.u;RT.cnt+=q;RT.doneCnt+=Math.min(dn,q);
    h+=`<tr class="${dn>=q&&q>0?'done':''}"><td><span class="t t${g.tier||0}">${g.tier?'T'+g.tier:'—'}</span></td><td><b>${g.name}</b></td><td class="r">${g.limit}</td><td class="r"><input class="n" style="width:56px" data-a="qty" data-g="${g.id}" value="${q}"></td><td class="r">${g.weight}/${g.perSlot}</td>
-   <td class="mats">${g.mats.map(([m,k])=>`<div>${m} ×${k} → <b>${fmt(k*q)}</b> <span class="mut">@${price(m)==null?'<span class="warn">가격?</span>':gk(price(m))}</span></div>`).join('')}</td>
+   <td class="mats">${g.mats.map(([m,k])=>`<div>${m}${hotMat(m)} ×${k} → <b>${fmt(k*q)}</b> <span class="mut">@${price(m)==null?'<span class="warn">가격?</span>':gk(price(m))}</span></div>`).join('')}</td>
    <td class="r neg">${gk(cost)}${uc.u?' <span class="warn">+?</span>':''}<div class="mut">개당 ${gk(uc.s)}</div></td>
    <td class="r"><input class="p" data-a="sale" data-k="d" data-g="${g.id}" value="${(S.sale[g.id]||{}).d||''}" placeholder="두카트"> <input class="p" data-a="sale" data-k="g" data-g="${g.id}" value="${(S.sale[g.id]||{}).g||''}" placeholder="골드"></td>
    <td class="r ${hasSale(g)?(pf>=0?'pos':'neg'):'mut'}">${hasSale(g)?(pf>=0?'+':'')+gk(pf):'판매가 미입력'}</td>
@@ -156,7 +161,7 @@ function xMats(){const c=C(),r=route(),nd=need(routeGoods(r),true);let tc=0,unk=
  let h=`<div style="display:flex;gap:8px;margin:6px 0"><textarea id="paste2" rows="2" style="flex:1" placeholder="일괄 입력: 한 줄에 '재료명 수량' (예: 금판 50)"></textarea><div style="display:flex;flex-direction:column;gap:4px"><button class="sm" data-a="pasteSet" data-src="paste2">덮어쓰기</button><button class="sm" data-a="pasteAdd" data-src="paste2">더하기</button></div></div>
  <table class="dt"><tr><th>재료</th><th class="r">필요(남은 교환)</th><th class="r">보유</th><th class="r">부족</th><th class="r">최저가</th><th class="r">부족분 비용</th></tr>`;
  for(const m of Object.keys(nd).sort()){const o=c.owned[m]||0,sh=Math.max(0,nd[m]-o),p=price(m),pr=S.prices[m];if(p==null&&sh)unk++;else tc+=sh*p;
-  h+=`<tr><td>${m}</td><td class="r">${fmt(nd[m])}</td><td class="r" style="white-space:nowrap"><button class="sm" data-a="om" data-m="${m}">−</button> <input class="n" data-a="own" data-m="${m}" value="${o}"> <button class="sm" data-a="op" data-m="${m}">＋</button> <button class="sm" data-a="ofill" data-m="${m}" data-r="1" title="필요량만큼">＝</button></td>
+  h+=`<tr><td>${m}${hotMat(m)}</td><td class="r">${fmt(nd[m])}</td><td class="r" style="white-space:nowrap"><button class="sm" data-a="om" data-m="${m}">−</button> <input class="n" data-a="own" data-m="${m}" value="${o}"> <button class="sm" data-a="op" data-m="${m}">＋</button> <button class="sm" data-a="ofill" data-m="${m}" data-r="1" title="필요량만큼">＝</button></td>
   <td class="r ${sh?'short':'pos'}">${sh?fmt(sh):'✓'}</td><td class="r"><input class="p" data-a="price" data-m="${m}" value="${p??''}" title="${pr?{snap:'API 스냅샷',api:'API 실시간',pril:'Prilus 스냅샷',feed:'공유 시세',manual:'수동'}[pr.src]||'':''}"></td><td class="r neg">${sh?(p==null?'?':gk(sh*p)):''}</td></tr>`}
  return h+`</table><div class="tot" style="margin-top:6px">부족분 구매비: <span class="neg">${gk(tc)} G</span>${unk?` <span class="warn">+가격 모름 ${unk}종</span>`:''} <span class="mut" style="font-weight:400;font-size:12px">(${r.name} 기준 · ± 는 Shift=10, Ctrl=100)</span></div>`}
 function runHtml(ru,pl,title,sub){if(!ru)return `<div class="card"><h2>${title} <span class="sub">${sub}</span></h2><div class="pos">남은 교환 없음 🎉</div></div>`;
@@ -174,7 +179,7 @@ function matCheckHtml(r){const c=C(),goods=routeGoods(r);let tc=0,unk=0,h=`<div 
   h+=`<tr class="sec"><td colspan="5">● ${ps}</td></tr>`;
   for(const g of gs){const rm=remOf(g);h+=`<tr><td class="g">T${g.tier||'—'} ${g.name} <span class="mut">(${rm})</span></td><td></td><td></td><td></td><td></td></tr>`;
    for(const[m,k]of g.mats){const needN=k*rm,o=c.owned[m]||0,sh=Math.max(0,needN-o),p=price(m),ok=o>=needN;if(sh){if(p==null)unk++;else tc+=sh*p}
-    h+=`<tr><td>${m}${sh?` <span class="neg">부족</span>`:''}</td><td class="r">${fmt(needN)}</td><td class="r ${ok?'pos':'neg'}">${fmt(o)}</td><td class="r mut">${p==null?'?':gk(p)}</td><td style="text-align:center"><span class="chk ${ok?'on':''}" data-a="mchk" data-m="${esc(m)}" data-n="${needN}" title="필요량만큼 보유로"></span></td></tr>`}}}
+    h+=`<tr><td>${m}${hotMat(m)}${sh?` <span class="neg">부족</span>`:''}</td><td class="r">${fmt(needN)}</td><td class="r ${ok?'pos':'neg'}">${fmt(o)}</td><td class="r mut">${p==null?'?':gk(p)}</td><td style="text-align:center"><span class="chk ${ok?'on':''}" data-a="mchk" data-m="${esc(m)}" data-n="${needN}" title="필요량만큼 보유로"></span></td></tr>`}}}
  if(!goods.some(g=>remOf(g)>0))h+=`<tr><td colspan="5" class="pos">남은 교환 없음 🎉</td></tr>`;
  return h+`</table><div class="footnote">부족분 ≈ <b class="neg">${gk(tc)} G</b>${unk?` <span class="warn">+가격모름 ${unk}</span>`:''} · 체크=필요량 채우기</div></div>`}
 function renderDash(){const c=C(),r=route(),pl=plan(r);
@@ -203,7 +208,7 @@ function render(){checkReset();const c=C();
  for(const[m,n]of Object.entries(nd)){const sh=n-(c.owned[m]||0);if(sh>0){const p=price(m);L.push({m,sh,p,sub:p==null?null:sh*p});if(p==null)unk++;else tot+=sh*p}}
  L.sort((a,b)=>(b.sub??-1)-(a.sub??-1));
  $('#buy').innerHTML=`<h2>🛒 살 것 <button class="sm" data-a="inv">보유 재료 입력</button></h2><div class="big neg">${gk(tot)} G${unk?` <span class="warn" style="font-size:12px">+가격 모름 ${unk}</span>`:''}</div><div class="mut" style="font-size:12px">${esc(c.name)} · 두 경로 남은 교환 기준 · ${L.length}종</div>
- <div class="buy"><span class="h">재료</span><span class="h r">필요</span><span class="h r">단가</span><span class="h r">소계</span>${L.map(x=>`<span>${x.m}</span><span class="r">${fmt(x.sh)}</span><span class="r mut">${x.p==null?'?':gk(x.p)}</span><span class="r neg">${x.sub==null?'?':gk(x.sub)}</span>`).join('')||'<span class="pos">다 있어요 🎉</span>'}</div>`;
+ <div class="buy"><span class="h">재료</span><span class="h r">필요</span><span class="h r">단가</span><span class="h r">소계</span>${L.map(x=>`<span>${x.m}${hotMat(x.m)}</span><span class="r">${fmt(x.sh)}</span><span class="r mut">${x.p==null?'?':gk(x.p)}</span><span class="r neg">${x.sub==null?'?':gk(x.sub)}</span>`).join('')||'<span class="pos">다 있어요 🎉</span>'}</div>`;
  renderX();renderLayer()}
 // ---- 팝오버/모달
 function renderLayer(){const el=$('#layer');if(!layer){el.innerHTML='';return}let h='';const c=C();
@@ -222,7 +227,7 @@ function renderLayer(){const el=$('#layer');if(!layer){el.innerHTML='';return}le
  if(layer.t==='inv'){const nd=need([...routeGoods(D.routes[0]),...routeGoods(D.routes[1])]);const ms=[...new Set([...Object.keys(nd),...Object.keys(c.owned).filter(m=>c.owned[m])])].sort();
   h=`<div class="pop" style="top:40px;left:50%;transform:translateX(-50%);width:640px;max-height:88vh;overflow:auto"><h2 style="margin-bottom:8px">🎒 ${esc(c.name)} 보유 재료</h2>
   <textarea id="paste" rows="4" style="width:100%" placeholder="한 줄에 '재료명 수량'  예) 금판 50"></textarea><div style="margin:6px 0 12px;display:flex;gap:6px"><button data-a="pasteSet">덮어쓰기</button><button data-a="pasteAdd">더하기</button><span class="mut" style="font-size:12px;align-self:center">± 는 Shift=10, Ctrl=100</span></div>
-  <table class="lt" style="width:100%">${ms.map(m=>{const o=c.owned[m]||0,n=nd[m]||0;return`<tr><td>${m}</td><td class="r ${o<n?'neg':'pos'}" style="font-size:12px">필요 ${fmt(n)}</td><td class="r" style="white-space:nowrap"><button class="sm" data-a="om" data-m="${m}">−</button> <input class="n" data-a="own" data-m="${m}" value="${o}"> <button class="sm" data-a="op" data-m="${m}">＋</button> <button class="sm" data-a="ofill" data-m="${m}" title="필요량만큼">＝</button></td></tr>`}).join('')}</table>
+  <table class="lt" style="width:100%">${ms.map(m=>{const o=c.owned[m]||0,n=nd[m]||0;return`<tr><td>${m}${hotMat(m)}</td><td class="r ${o<n?'neg':'pos'}" style="font-size:12px">필요 ${fmt(n)}</td><td class="r" style="white-space:nowrap"><button class="sm" data-a="om" data-m="${m}">−</button> <input class="n" data-a="own" data-m="${m}" value="${o}"> <button class="sm" data-a="op" data-m="${m}">＋</button> <button class="sm" data-a="ofill" data-m="${m}" title="필요량만큼">＝</button></td></tr>`}).join('')}</table>
   <div style="text-align:right;margin-top:10px"><button data-a="close">닫기</button></div></div>`}
  el.innerHTML='<div class="mask" data-a="close"></div>'+h}
 function setLayer(l){layer=l;renderLayer()}
@@ -278,12 +283,12 @@ const FEED='https://mabi-life.github.io/prices.json';
 async function loadFeed(){const r=await fetch(FEED+'?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error(r.status);const j=await r.json();if(!j.prices)throw new Error('bad');return j}
 const feedTime=u=>{const d=new Date(u);return isNaN(d)?'?':d.toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit',hour12:false})};
 async function loadPrices(){const ms0=Object.keys(need([...routeGoods(D.routes[0]),...routeGoods(D.routes[1])],false));
- try{const j=await loadFeed();const res={};for(const m of ms0){const e=j.prices[m];if(e&&e.min!=null)res[m]=e.min}if(!Object.keys(res).length)throw new Error('empty');const t=Date.parse(j.updated)||Date.now();
-  return mut(()=>{for(const[m,p]of Object.entries(res))S.prices[m]={p,src:'feed',t}},`공유 시세 ${Object.keys(res).length}종 (${feedTime(j.updated)} 기준)`)}catch(x){if(!localStorage.getItem(KEYLS))return toast('공유 시세를 불러오지 못했습니다 (⚙ API 키로 직접 조회 가능)')}
+ try{const j=await loadFeed();const res={};for(const m of ms0){const e=j.prices[m];if(e&&e.min!=null)res[m]={p:e.min,count:e.count}}if(!Object.keys(res).length)throw new Error('empty');const t=Date.parse(j.updated)||Date.now();
+  return mut(()=>{for(const[m,v]of Object.entries(res))S.prices[m]={p:v.p,src:'feed',t,count:v.count}},`공유 시세 ${Object.keys(res).length}종 (${feedTime(j.updated)} 기준)`)}catch(x){if(!localStorage.getItem(KEYLS))return toast('공유 시세를 불러오지 못했습니다 (⚙ API 키로 직접 조회 가능)')}
  return loadPricesApi()}
 async function loadPricesApi(){const key=localStorage.getItem(KEYLS);if(!key)return toast('API 키를 먼저 입력하세요');const ms=Object.keys(need([...routeGoods(D.routes[0]),...routeGoods(D.routes[1])],false));
  const btn=$('#priceBtn');const res={};let fail=0;for(let i=0;i<ms.length;i++){if(btn)btn.textContent=`API ${i+1}/${ms.length}`;try{const p=await fetchPrice(ms[i],key);if(p!=null)res[ms[i]]=p;else fail++}catch(x){fail++;if(x.message==='429')await new Promise(r=>setTimeout(r,1500))}await new Promise(r=>setTimeout(r,250))}
  mut(()=>{for(const[m,p]of Object.entries(res))S.prices[m]={p,src:'api',t:Date.now()}},`시세 ${Object.keys(res).length}종 갱신${fail?` · 실패 ${fail}`:''}`)}
-window.__barter={get S(){return S},plan,weekKey,render,exchange,parsePaste,migrate,setOpen:id=>{open=id;render()},setLayer,route,get UI(){return UI},openRoutes:()=>{UI.routes=true;try{localStorage.setItem(UIK,JSON.stringify(UI))}catch(x){}render()}};
+window.__barter={get S(){return S},plan,weekKey,render,exchange,parsePaste,migrate,setOpen:id=>{open=id;render()},setLayer,route,get UI(){return UI},openRoutes:()=>{UI.routes=true;try{localStorage.setItem(UIK,JSON.stringify(UI))}catch(x){}render()},HOT_MIN,hotIcon,hotMat};
 render();
 </script></body></html>
