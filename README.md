@@ -1,5 +1,5 @@
 # mabi-life.github.io
-마비노기 경매장 공유 시세 피드. 3시간마다 GitHub Actions가 `items.json`의 아이템 최저 단가를 조회해 `docs/prices.json`에 게시.
+마비노기 경매장 공유 시세 피드. 10분마다 GitHub Actions가 `items.json`의 아이템 최저 단가를 조회해 `docs/prices.json`에 게시.
 
 URL: https://mabi-life.github.io/prices.json
 
