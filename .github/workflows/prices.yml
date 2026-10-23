@@ -1,6 +1,7 @@
 name: update-prices
 on:
-  # 실행 주기: 서비스 키(500 req/s, 2천만/일) → 10분마다 시험.
+  # 실행 주기: 서비스 키(500 req/s, 2천만/일) → 10분마다.
+  # list+history ≈ 아이템수×2×144 ≈ 5~6만/일 (20M 한도 여유).
   schedule: [{cron: '*/10 * * * *'}]
   workflow_dispatch:
 permissions: {contents: write}
@@ -18,5 +19,5 @@ jobs:
       - run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/prices.json
+          git add docs/prices.json docs/history_roll.json
           git diff --cached --quiet || (git commit -m "prices: $(date -u +%FT%TZ)" && git pull --rebase && git push)
